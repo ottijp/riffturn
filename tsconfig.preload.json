@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.electron.json",
+  "compilerOptions": {
+    "lib": ["ES2024"]
+  },
+  "include": ["src/preload/**/*", "src/shared/**/*"]
+}

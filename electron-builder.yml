@@ -1,0 +1,44 @@
+appId: biz.sakao.riffturn
+productName: RiffTurn
+
+directories:
+  output: release
+
+files:
+  - dist/**/*
+  - package.json
+  - '!node_modules/better-sqlite3/{build,deps,src}/**/*'
+  - '!node_modules/node-addon-api/**/*'
+
+electronLanguages:
+  - en
+  - ja
+  - es
+  - pt_BR
+
+mac:
+  target:
+    - dmg
+  hardenedRuntime: true
+  files:
+    - '!node_modules/better-sqlite3/prebuilds/{darwin-x64,linux-arm64,linux-x64,linuxmusl-arm64,linuxmusl-x64,win32-arm64,win32-x64}.node'
+  asarUnpack:
+    - node_modules/better-sqlite3/prebuilds/darwin-arm64.node
+
+win:
+  target:
+    - nsis
+  files:
+    - '!node_modules/better-sqlite3/prebuilds/{darwin-arm64,darwin-x64,linux-arm64,linux-x64,linuxmusl-arm64,linuxmusl-x64,win32-arm64}.node'
+  asarUnpack:
+    - node_modules/better-sqlite3/prebuilds/win32-x64.node
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: AudioVideo
+  files:
+    - '!node_modules/better-sqlite3/prebuilds/{darwin-arm64,darwin-x64,linux-arm64,linuxmusl-arm64,linuxmusl-x64,win32-arm64,win32-x64}.node'
+  asarUnpack:
+    - node_modules/better-sqlite3/prebuilds/linux-x64.node

@@ -1,0 +1,20 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# env files
+.env*
+
+# artifacts
+/dist/
+/.astro/
+/release/
