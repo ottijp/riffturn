@@ -1,0 +1,21 @@
+---
+import App from '../../App'
+import '../../styles/globals.css'
+
+export function getStaticPaths() {
+  return ['ja', 'en', 'es', 'pt-BR'].map((locale) => ({ params: { locale } }))
+}
+
+const buildYear = new Date().getFullYear()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RiffTurn</title>
+  </head>
+  <body>
+    <App client:only="react" buildYear={buildYear} />
+  </body>
+</html>

@@ -1,8 +1,11 @@
 {
   "name": "riffturn",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
   "main": "dist/electron/main/main.cjs",
+  "imports": {
+    "#app-identity": "./app-identity.json"
+  },
   "engines": {
     "node": ">=24.0.0"
   },
@@ -17,14 +20,19 @@
     "lint:css:fix": "npm run lint:css -- --fix",
     "lint:js": "eslint .",
     "lint:js:fix": "npm run lint:js -- --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "clean": "rm -rf dist .astro release",
     "desktop:dev": "concurrently -k \"ASTRO_TELEMETRY_DISABLED=1 astro dev --ignore-lock\" \"tsc --watch --project tsconfig.main.json\" \"tsc --watch --project tsconfig.preload.json\" \"wait-on http://127.0.0.1:4321 file:dist/electron/main/main.cjs file:dist/electron/preload/preload.cjs && nodemon --watch dist/electron --delay 200ms --exec electron .\"",
     "desktop:build:mac": "npm run build && electron-builder --mac --arm64",
     "desktop:build:win": "npm run build && electron-builder --win --x64",
-    "desktop:build:linux": "npm run build && electron-builder --linux --x64"
+    "desktop:build:linux": "npm run build && electron-builder --linux --x64",
+    "check-license": "license-checker --production --onlyAllow \"MIT;BSD-3-Clause;BSD-2-Clause;0BSD;ISC;Apache-2.0;Python-2.0;CC-BY-4.0;BlueOak-1.0.0\" --unknown --summary --excludePackages=\"@vue/compiler-sfc@2.7.16\""
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3"
+    "better-sqlite3": "^13.0.3",
+    "lucide-react": "^1.59.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -39,7 +47,9 @@
     "electron": "^44.7.0",
     "electron-builder": "^26.0.12",
     "eslint": "^10.12.0",
+    "license-checker": "^25.0.1",
     "nodemon": "^3.1.14",
+    "prettier": "^3.9.10",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "stylelint": "^17.16.0",

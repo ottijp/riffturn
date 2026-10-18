@@ -1,0 +1,99 @@
+.transport {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: center;
+  margin-top: var(--space-2xl);
+}
+.left,
+.playback,
+.right {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+.left,
+.right {
+  justify-content: end;
+}
+.iconButton,
+.playButton {
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  background: var(--color-panel-raised);
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-pill);
+}
+.iconButton {
+  width: var(--control-size-xl);
+  height: var(--control-size-xl);
+}
+.iconButton svg {
+  width: var(--text-lg);
+  height: var(--text-lg);
+  stroke-width: 1.75;
+}
+.playButton {
+  width: var(--control-size-2xl);
+  height: var(--control-size-2xl);
+  color: var(--color-canvas);
+  background: var(--color-accent);
+  border: 0;
+}
+.playButton svg {
+  width: var(--space-xl);
+  height: var(--space-xl);
+  stroke-width: 2;
+}
+.playButton:disabled {
+  cursor: wait;
+  opacity: 0.78;
+}
+.loadingIndicator {
+  width: var(--text-lg);
+  height: var(--text-lg);
+  border: var(--border-width-normal) solid var(--color-canvas);
+  border-right-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.now {
+  margin-left: var(--space-md);
+  font-variant-numeric: tabular-nums;
+}
+.currentTime {
+  font-weight: var(--font-weight-strong);
+}
+.duration {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+.masterVolume {
+  display: grid;
+  gap: var(--space-xs);
+  min-width: 10rem;
+  padding-left: var(--space-md);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  letter-spacing: 0.08em;
+  border-left: var(--border-width-thin) solid var(--color-line);
+}
+.masterVolume span {
+  display: flex;
+  justify-content: space-between;
+}
+.masterVolume output {
+  color: var(--color-text);
+  letter-spacing: normal;
+}
+.masterVolume input {
+  width: 100%;
+  accent-color: var(--color-accent);
+}

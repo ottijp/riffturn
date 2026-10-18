@@ -1,0 +1,11 @@
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-2xl);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  background: var(--color-overlay);
+  border-top: var(--border-width-thin) solid var(--color-line);
+}

@@ -1,0 +1,103 @@
+.root {
+  position: relative;
+  display: block;
+  min-height: 0;
+  padding: 0;
+  margin-top: var(--space-md);
+  background: transparent;
+  border: 0;
+}
+
+.labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 var(--space-2xs);
+}
+
+.currentTime {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-strong);
+  color: var(--color-text);
+}
+
+.duration {
+  font-size: var(--text-sm);
+  text-align: right;
+}
+
+.root input {
+  width: 100%;
+  height: 2.8rem;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: ew-resize;
+  background: var(--color-panel-raised);
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+.root input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0 var(--seek-progress),
+    var(--color-panel-raised) var(--seek-progress) 100%
+  );
+  border-radius: calc(var(--radius-sm) - var(--border-width-thin));
+}
+
+.root input::-webkit-slider-thumb {
+  width: 0.25rem;
+  height: 2.8rem;
+  margin-top: 0;
+  -webkit-appearance: none;
+  background: var(--color-text);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.root input::-moz-range-track {
+  height: 2.8rem;
+  background: var(--color-panel-raised);
+  border-radius: calc(var(--radius-sm) - var(--border-width-thin));
+}
+
+.root input::-moz-range-progress {
+  height: 2.8rem;
+  background: var(--color-accent);
+  border-radius: calc(var(--radius-sm) - var(--border-width-thin)) 0 0
+    calc(var(--radius-sm) - var(--border-width-thin));
+}
+
+.root input::-moz-range-thumb {
+  width: 0.25rem;
+  height: 2.8rem;
+  background: var(--color-text);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.root input:focus-visible {
+  outline: var(--border-width-normal) solid var(--color-text);
+  outline-offset: var(--space-2xs);
+}
+
+.segmentDividers {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2.8rem;
+  pointer-events: none;
+}
+
+.segmentDividers span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--border-width-thin);
+  background: var(--color-line);
+}

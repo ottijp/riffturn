@@ -1,10 +1,11 @@
-appId: biz.sakao.riffturn
+extends: ./app-identity.json
 productName: RiffTurn
 
 directories:
   output: release
 
 files:
+  - app-identity.json
   - dist/**/*
   - package.json
   - '!node_modules/better-sqlite3/{build,deps,src}/**/*'

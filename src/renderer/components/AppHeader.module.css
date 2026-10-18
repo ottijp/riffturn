@@ -1,0 +1,60 @@
+@value compact from '../styles/breakpoints.css';
+
+.header {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  min-height: 4.75rem;
+  padding: var(--space-sm) var(--space-2xl);
+  border-bottom: var(--border-width-thin) solid var(--color-line);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.projectButton {
+  display: grid;
+  place-items: center;
+  width: var(--control-size-lg);
+  height: var(--control-size-lg);
+  padding: 0;
+  color: var(--color-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.projectButton:hover {
+  color: var(--color-text);
+  background: var(--color-panel-raised);
+}
+
+.projectButton svg {
+  width: var(--text-lg);
+  height: var(--text-lg);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: compact) {
+  .header {
+    min-height: 3.75rem;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .headerActions {
+    gap: var(--space-2xs);
+  }
+
+  .projectButton {
+    width: var(--control-size-md);
+    height: var(--control-size-md);
+  }
+}

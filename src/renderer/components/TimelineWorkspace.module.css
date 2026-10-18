@@ -1,0 +1,29 @@
+@value compact from '../styles/breakpoints.css';
+
+.root {
+  min-width: 0;
+  padding: clamp(var(--space-lg), 3vw, var(--space-3xl));
+}
+
+.waveCard {
+  position: relative;
+  margin-top: 0;
+}
+
+.lowerControls {
+  margin-top: var(--space-3xl);
+}
+
+@media (max-width: compact) {
+  .root {
+    padding: var(--space-md);
+  }
+
+  .waveCard {
+    padding: var(--space-sm);
+  }
+
+  .lowerControls {
+    margin-top: var(--space-2xl);
+  }
+}

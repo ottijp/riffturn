@@ -7,15 +7,6 @@ const eslintConfig = defineConfig([
   {
     rules: {
       'no-console': 'error',
-      quotes: ['error', 'single', {
-        avoidEscape: true,
-        allowTemplateLiterals: false,
-      }],
-      semi: ['error', 'never'],
-      'brace-style': ['error', 'stroustrup', {
-        allowSingleLine: true,
-      }],
-      'comma-dangle': ['error', 'always-multiline'],
     },
   },
   {
