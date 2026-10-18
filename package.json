@@ -1,6 +1,10 @@
 {
   "name": "riffturn",
   "version": "0.1.0",
+  "author": {
+    "name": "Satoshi Sakao",
+    "email": "ottijp@users.noreply.github.com"
+  },
   "license": "MIT",
   "main": "dist/electron/main/main.cjs",
   "imports": {
@@ -24,9 +28,9 @@
     "format:check": "prettier --check .",
     "clean": "rm -rf dist .astro release",
     "desktop:dev": "concurrently -k \"astro dev --ignore-lock\" \"tsc --watch --project tsconfig.main.json\" \"tsc --watch --project tsconfig.preload.json\" \"wait-on http://127.0.0.1:4321 file:dist/electron/main/main.cjs file:dist/electron/preload/preload.cjs && nodemon --watch dist/electron --delay 200ms --exec electron .\"",
-    "desktop:build:mac": "npm run build && electron-builder --mac --arm64",
-    "desktop:build:win": "npm run build && electron-builder --win --x64",
-    "desktop:build:linux": "npm run build && electron-builder --linux --x64",
+    "desktop:build:mac": "npm run build && electron-builder --mac --arm64 --publish=never",
+    "desktop:build:win": "npm run build && electron-builder --win --x64 --publish=never",
+    "desktop:build:linux": "npm run build && electron-builder --linux --x64 --publish=never",
     "check-license": "license-checker --production --onlyAllow \"MIT;BSD-3-Clause;BSD-2-Clause;0BSD;ISC;Apache-2.0;Python-2.0;CC-BY-4.0;BlueOak-1.0.0\" --unknown --summary --excludePackages=\"@vue/compiler-sfc@2.7.16\""
   },
   "dependencies": {
