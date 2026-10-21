@@ -9,7 +9,6 @@ export function registerRiffTurnScheme(): void {
       privileges: {
         standard: true,
         secure: true,
-        supportFetchAPI: true,
       },
     },
   ])
