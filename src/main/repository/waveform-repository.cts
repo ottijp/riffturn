@@ -1,6 +1,6 @@
-import type { ApplicationDatabase } from './database.cjs'
-import { waveformRecordSchema } from '../shared/project.js'
-import type { WaveformRecord } from '../shared/project.js'
+import type { ApplicationDatabase } from '../database.cjs'
+import { waveformRecordSchema } from '../../shared/project.js'
+import type { WaveformRecord } from '../../shared/project.js'
 
 export interface WaveformRepository {
   get(fileHash: string): WaveformRecord | null

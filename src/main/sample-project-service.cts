@@ -3,7 +3,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { applicationDataPath } from './database.cjs'
 import { sampleAssets } from './sample-assets.cjs'
-import type { ProjectRepository } from './project-repository.cjs'
+import type { ProjectRepository } from './repository/project-repository.cjs'
 import type { ProjectRecord } from '../shared/project.js'
 
 export interface SampleProjectService {

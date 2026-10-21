@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
-import { projectRecordSchema } from '../shared/project.js'
-import type { ProjectRepository } from './project-repository.cjs'
-import type { SampleProjectService } from './sample-project-service.cjs'
+import { projectRecordSchema } from '../../shared/project.js'
+import type { ProjectRepository } from '../repository/project-repository.cjs'
+import type { SampleProjectService } from '../sample-project-service.cjs'
 
 export function registerProjectIpc(
   projects: ProjectRepository,

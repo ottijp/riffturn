@@ -1,6 +1,6 @@
-import type { ApplicationDatabase } from './database.cjs'
-import { projectRecordSchema } from '../shared/project.js'
-import type { ProjectRecord } from '../shared/project.js'
+import type { ApplicationDatabase } from '../database.cjs'
+import { projectRecordSchema } from '../../shared/project.js'
+import type { ProjectRecord } from '../../shared/project.js'
 
 export interface ProjectRepository {
   delete(projectId: string): void
