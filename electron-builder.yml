@@ -16,6 +16,7 @@ electronLanguages:
   - ja
   - es
   - pt_BR
+icon: src/assets/logo.png
 
 mac:
   target:
