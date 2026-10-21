@@ -8,6 +8,7 @@ import { createSampleProjectService } from './sample-project-service.cjs'
 import { createWaveformRepository } from './waveform-repository.cjs'
 import { registerWaveformIpc } from './waveform-ipc.cjs'
 import { createWindow } from './window.cjs'
+import { configureMenu } from './menu.cjs'
 import type { ApplicationDatabase } from './database.cjs'
 
 let database: ApplicationDatabase
@@ -15,6 +16,7 @@ let database: ApplicationDatabase
 registerRiffTurnScheme()
 
 app.whenReady().then(async () => {
+  configureMenu()
   registerRiffTurnProtocol()
   database = await openDatabase()
   const projects = createProjectRepository(database)

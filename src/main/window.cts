@@ -58,6 +58,7 @@ export function createWindow(): void {
     minHeight: minimumHeight,
     webPreferences: {
       contextIsolation: true,
+      devTools: !app.isPackaged,
       nodeIntegration: false,
       preload: path.join(__dirname, '..', 'preload', 'preload.cjs'),
     },
