@@ -1,38 +1,27 @@
 import { app, BrowserWindow } from 'electron'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { z } from 'zod'
 
 const defaultWidth = 1280
 const defaultHeight = 820
 const minimumWidth = 600
 const minimumHeight = 400
 
-interface WindowState {
-  height: number
-  width: number
-}
+const windowStateSchema = z.object({
+  width: z.number().finite().min(minimumWidth),
+  height: z.number().finite().min(minimumHeight),
+})
 
 function windowStatePath(): string {
   return path.join(app.getPath('userData'), 'window-state.json')
 }
 
-function isValidDimension(value: unknown, minimum: number): value is number {
-  return typeof value === 'number' && Number.isFinite(value) && value >= minimum
-}
-
-function loadWindowState(): WindowState {
+function loadWindowState(): z.infer<typeof windowStateSchema> {
   try {
     const state: unknown = JSON.parse(readFileSync(windowStatePath(), 'utf8'))
-    if (
-      typeof state === 'object' &&
-      state !== null &&
-      'width' in state &&
-      'height' in state &&
-      isValidDimension(state.width, minimumWidth) &&
-      isValidDimension(state.height, minimumHeight)
-    ) {
-      return { width: state.width, height: state.height }
-    }
+    const result = windowStateSchema.safeParse(state)
+    if (result.success) return result.data
   } catch {
     // 既定サイズを使用する．
   }
