@@ -13,8 +13,13 @@ export function registerProjectIpc(
   ipcMain.handle('projects:save', (_event, project: unknown) => {
     const result = projectRecordSchema.safeParse(project)
     if (!result.success) throw new Error('プロジェクトが不正です．')
-    if (result.data.isSample && !samples.isManagedPath(result.data.sourcePath))
-      throw new Error('サンプル音源のパスが不正です．')
+    if (result.data.isSample) {
+      if (!samples.isManagedPath(result.data.sourcePath))
+        throw new Error('サンプル音源のパスが不正です．')
+      const existing = projects.get(result.data.projectId)
+      if (!existing?.isSample || existing.description !== result.data.description)
+        throw new Error('サンプルプロジェクトの説明は変更できません．')
+    }
     projects.save(result.data)
   })
   ipcMain.handle('projects:delete', async (_event, projectId: string) => {

@@ -25,6 +25,7 @@ const segmentRestartThresholdSeconds = 3
 
 export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   const [title, setTitle] = useState('Midnight Drive')
+  const [description, setDescription] = useState('')
   const [duration, setDuration] = useState(96)
   const [, setNotice] = useState('')
   const [projectId, setProjectId] = useState<string | null>(null)
@@ -65,6 +66,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     setProjectId(project.projectId)
     setFileHash(project.fileHash)
     setTitle(project.title)
+    setDescription(project.description)
     setDuration(project.duration)
     setSourcePath(project.sourcePath)
     setIsSample(project.isSample)
@@ -103,6 +105,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     library.persist({
       projectId,
       title,
+      description,
       duration,
       fileHash,
       sourcePath,
@@ -122,6 +125,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     sourcePath,
     isSample,
     title,
+    description,
     duration,
     segments.segments,
     settings.loopRange,
@@ -185,7 +189,10 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       setSourcePath(path)
       setIsSample(false)
       setTitle(details.name.replace(/\.[^/.]+$/, ''))
-      if (isNewProject) setProjectId(null)
+      if (isNewProject) {
+        setProjectId(null)
+        setDescription('')
+      }
       transport.playAfterLoadRef.current = true
       sourceLoadIdRef.current += 1
       transport.stop()
@@ -230,6 +237,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     setFileHash(null)
     setSourcePath(null)
     setIsSample(false)
+    setDescription('')
     transport.setAudioLoading(false)
     waveform.clear()
     setFileLoadMode(null)
@@ -368,7 +376,16 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         onShowProjectInfo={setProjectInfo}
         projects={library.projects}
       />
-      <ProjectInfoDialog project={projectInfo} onClose={() => setProjectInfo(null)} />
+      <ProjectInfoDialog
+        project={projectInfo}
+        onClose={() => setProjectInfo(null)}
+        onSaveDescription={(nextDescription) => {
+          setDescription(nextDescription)
+          setProjectInfo((current) =>
+            current ? { ...current, description: nextDescription } : current,
+          )
+        }}
+      />
       <TimelineWorkspace
         activeSegment={transport.activeSegment}
         audioLoading={transport.audioLoading}

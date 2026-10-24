@@ -6,6 +6,8 @@ export const sampleAssets = [
     audioFileName: 'Monplaisir - Monplaisir - 06 - Juillet.mp3',
     definition: {
       title: 'Monplaisir - Monplaisir - 06 - Juillet',
+      description:
+        'Bundled sample audio\n"Juillet” by Monplaisir"\nhttps://freemusicarchive.org/music/Monplaisir/Bonjour_from_Paris_Nantes_and_Montreal/Monplaisir_-_Bonjour_from_Paris_Nantes_and_Montreal_-_06_Juillet/\nLicensed under CC0 1.0',
       duration: 153.000249,
       fileHash: 'eed6551638a1d8778d7f3b490b21959665416167a58818be5f7c900ca7973628',
       segments: [

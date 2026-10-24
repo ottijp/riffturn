@@ -15,6 +15,7 @@ export const storedSegmentSchema = z.strictObject({
 
 export const projectSettingsSchema = z.strictObject({
   title: z.string(),
+  description: z.string().default(''),
   duration: finiteNumberSchema,
   fileHash: z.string(),
   segments: z.array(storedSegmentSchema),
