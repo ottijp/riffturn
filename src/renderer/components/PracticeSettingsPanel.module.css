@@ -80,15 +80,6 @@
   letter-spacing: 0.1em;
 }
 
-.loopDisabled {
-  padding: var(--space-sm);
-  margin: 0;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-  background: var(--color-panel-raised);
-  border-radius: var(--radius-sm);
-}
-
 .presetActions {
   display: flex;
   gap: var(--space-xs);

@@ -227,11 +227,6 @@ export function PracticeSettingsPanel({
             Delete
           </Button>
         </div>
-        {loopMode === 'none' && (
-          <p className={styles.loopDisabled}>
-            Play from the current position to the end of the track.
-          </p>
-        )}
         {loopMode === 'segment' && (
           <div className={styles.loopSegmentControls}>
             <label>
