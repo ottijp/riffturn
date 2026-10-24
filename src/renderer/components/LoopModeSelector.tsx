@@ -1,5 +1,6 @@
 import type { LoopMode } from '../../shared/project'
 import styles from './LoopModeSelector.module.css'
+import { Button } from './Button'
 
 export function LoopModeSelector({
   mode,
@@ -17,15 +18,17 @@ export function LoopModeSelector({
           ['time', 'Time'],
         ] as const
       ).map(([value, label]) => (
-        <button
+        <Button
           key={value}
-          type="button"
-          className={mode === value ? styles.selected : ''}
+          active={mode === value}
+          className={mode === value ? styles.selected : undefined}
           aria-pressed={mode === value}
+          size="sm"
+          variant="ghost"
           onClick={() => onChange(value)}
         >
           {label}
-        </button>
+        </Button>
       ))}
     </div>
   )

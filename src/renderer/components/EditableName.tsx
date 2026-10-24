@@ -1,6 +1,7 @@
 import { Check, Pencil, X } from 'lucide-react'
 import { useState } from 'react'
 import styles from './EditableName.module.css'
+import { IconButton } from './Button'
 
 type EditableNameProps = {
   ariaLabel: string
@@ -46,29 +47,27 @@ export function EditableName({
               if (event.key === 'Escape') cancel()
             }}
           />
-          <button
-            type="button"
+          <IconButton
             aria-label={`Save ${ariaLabel}`}
             onMouseDown={(event) => event.preventDefault()}
             onClick={commit}
           >
             <Check aria-hidden="true" />
-          </button>
-          <button
-            type="button"
+          </IconButton>
+          <IconButton
             aria-label={`Cancel editing ${ariaLabel}`}
             onMouseDown={(event) => event.preventDefault()}
             onClick={cancel}
           >
             <X aria-hidden="true" />
-          </button>
+          </IconButton>
         </>
       ) : (
         <>
           <Heading id={headingId}>{value}</Heading>
-          <button type="button" aria-label={`Edit ${ariaLabel}`} onClick={begin}>
+          <IconButton aria-label={`Edit ${ariaLabel}`} onClick={begin}>
             <Pencil aria-hidden="true" />
-          </button>
+          </IconButton>
         </>
       )}
     </div>

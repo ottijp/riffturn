@@ -1,6 +1,7 @@
 import { Fragment, type RefObject } from 'react'
 import type { LoopMode, StoredSegment } from '../../shared/project'
 import styles from './WaveformTimeline.module.css'
+import { Button, IconButton } from './Button'
 
 type WaveformTimelineProps = {
   canvasRef: RefObject<HTMLCanvasElement | null>
@@ -44,26 +45,28 @@ export function WaveformTimeline({
       )}
       {segments.map((segment) => (
         <Fragment key={segment.id}>
-          <button
+          <Button
             aria-label={`Go to the start of ${segment.label}`}
             onClick={() => onSelect(segment)}
             className={styles.segment}
+            variant="ghost"
             style={{
               left: `${(segment.start / duration) * 100}%`,
               width: `${((segment.end - segment.start) / duration) * 100}%`,
             }}
           >
             <span>{segment.label}</span>
-          </button>
-          <button
+          </Button>
+          <IconButton
             className={styles.settingsButton}
             aria-label={`Edit ${segment.label}`}
             title={`Edit ${segment.label}`}
+            variant="secondary"
             style={{ left: `${(segment.end / duration) * 100}%` }}
             onClick={() => onOpenSettings(segment)}
           >
             ⚙
-          </button>
+          </IconButton>
         </Fragment>
       ))}
       <span className={styles.playhead} style={{ left: `${(currentTime / duration) * 100}%` }} />

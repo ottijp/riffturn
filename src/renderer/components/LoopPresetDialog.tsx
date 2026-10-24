@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Dialog } from './Dialog'
 import styles from './LoopPresetDialog.module.css'
+import { Button } from './Button'
 
 type LoopPresetDialogProps = {
   onClose: () => void
@@ -50,12 +51,12 @@ export function LoopPresetDialog({ onClose, onSave }: LoopPresetDialogProps) {
         </label>
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.actions}>
-          <button type="button" onClick={onClose}>
+          <Button variant="secondary" onClick={onClose}>
             Cancel
-          </button>
-          <button className={styles.primaryButton} disabled={saving} type="submit">
+          </Button>
+          <Button disabled={saving} loading={saving} type="submit" variant="primary">
             {saving ? 'Saving…' : 'Save'}
-          </button>
+          </Button>
         </div>
       </form>
     </Dialog>

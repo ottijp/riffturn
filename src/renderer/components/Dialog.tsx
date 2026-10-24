@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import type { ReactNode } from 'react'
 import styles from './Dialog.module.css'
+import { BackdropButton, IconButton } from './Button'
 
 type DialogProps = {
   children: ReactNode
@@ -23,7 +24,7 @@ export function Dialog({
 }: DialogProps) {
   return (
     <>
-      <button className={styles.backdrop} aria-label={closeLabel} onClick={onClose} />
+      <BackdropButton className={styles.backdrop} aria-label={closeLabel} onClick={onClose} />
       <section
         className={`${styles.dialog} ${size === 'wide' ? styles.wide : ''}`}
         role="dialog"
@@ -35,9 +36,9 @@ export function Dialog({
             {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
             <h2 id={titleId}>{title}</h2>
           </div>
-          <button className={styles.closeButton} aria-label={closeLabel} onClick={onClose}>
+          <IconButton className={styles.closeButton} aria-label={closeLabel} variant="ghost" onClick={onClose}>
             <X aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
         {children}
       </section>

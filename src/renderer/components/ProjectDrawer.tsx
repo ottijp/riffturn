@@ -2,6 +2,7 @@ import { Info, Music, Plus, Trash2, X } from 'lucide-react'
 import type { ProjectSummary } from '../../shared/project'
 import { formatDuration } from '../lib/format'
 import styles from './ProjectDrawer.module.css'
+import { BackdropButton, Button, IconButton } from './Button'
 
 type ProjectDrawerProps = {
   currentProjectId: string | null
@@ -28,7 +29,7 @@ export function ProjectDrawer({
 }: ProjectDrawerProps) {
   return (
     <>
-      <button
+      <BackdropButton
         className={`${styles.backdrop} ${isOpen ? styles.backdropOpen : ''}`}
         aria-hidden={!isOpen}
         aria-label="Close projects"
@@ -43,23 +44,25 @@ export function ProjectDrawer({
       >
         <div className={styles.heading}>
           <h2>Projects</h2>
-          <button className={styles.closeButton} aria-label="Close projects" onClick={onClose}>
+          <IconButton className={styles.closeButton} aria-label="Close projects" variant="ghost" onClick={onClose}>
             <X aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
-        <button className={styles.addAudioButton} onClick={onAddAudio}>
+        <Button className={styles.addAudioButton} fullWidth onClick={onAddAudio}>
           <Plus aria-hidden="true" />
           Add audio
-        </button>
-        <button className={styles.addAudioButton} onClick={onAddSamples}>
+        </Button>
+        <Button className={styles.addAudioButton} fullWidth onClick={onAddSamples}>
           <Plus aria-hidden="true" />
           Add sample projects
-        </button>
+        </Button>
         <div className={styles.projects}>
           {projects.map((project) => (
             <div key={project.projectId} className={styles.projectRow}>
-              <button
+              <Button
                 className={`${styles.project} ${project.projectId === currentProjectId ? styles.currentProject : ''}`}
+                variant="ghost"
+                active={project.projectId === currentProjectId}
                 onClick={() => onSelectProject(project)}
               >
                 <span
@@ -74,23 +77,25 @@ export function ProjectDrawer({
                     {project.isSample ? 'Sample audio' : 'Local audio'}
                   </small>
                 </span>
-              </button>
-              <button
+              </Button>
+              <IconButton
                 className={styles.projectInfoButton}
                 aria-label={`Show information for ${project.title}`}
                 title={`Show information for ${project.title}`}
+                variant="secondary"
                 onClick={() => onShowProjectInfo(project)}
               >
                 <Info aria-hidden="true" />
-              </button>
-              <button
+              </IconButton>
+              <IconButton
                 className={styles.deleteProjectButton}
                 aria-label={`Delete ${project.title}`}
                 title={`Delete ${project.title}`}
+                variant="danger"
                 onClick={() => onRemoveProject(project)}
               >
                 <Trash2 aria-hidden="true" />
-              </button>
+              </IconButton>
             </div>
           ))}
         </div>

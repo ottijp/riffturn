@@ -1,5 +1,6 @@
 import { Info, PanelLeftOpen } from 'lucide-react'
 import styles from './AppHeader.module.css'
+import { IconButton } from './Button'
 import { EditableName } from './EditableName'
 
 type AppHeaderProps = {
@@ -20,14 +21,16 @@ export function AppHeader({
   return (
     <header className={styles.header}>
       <div className={styles.headerActions}>
-        <button
+        <IconButton
           className={styles.projectButton}
           aria-label="Open projects"
           title="Open projects"
+          size="lg"
+          variant="ghost"
           onClick={onOpenProjectDrawer}
         >
           <PanelLeftOpen aria-hidden="true" />
-        </button>
+        </IconButton>
       </div>
       <div className={styles.titleActions}>
         <EditableName
@@ -36,15 +39,16 @@ export function AppHeader({
           value={title}
           onCommit={onTitleChange}
         />
-        <button
+        <IconButton
           className={styles.projectInfoButton}
           aria-label="Show project information"
           title="Show project information"
           disabled={!projectInfoAvailable}
+          variant="secondary"
           onClick={onShowProjectInfo}
         >
           <Info aria-hidden="true" />
-        </button>
+        </IconButton>
       </div>
     </header>
   )

@@ -1,4 +1,5 @@
 import styles from './AudioReloadPrompt.module.css'
+import { BackdropButton, Button } from './Button'
 
 type AudioReloadPromptProps = {
   isOpen: boolean
@@ -11,7 +12,7 @@ export function AudioReloadPrompt({ isOpen, onClose, onSelectAudio }: AudioReloa
 
   return (
     <>
-      <button
+      <BackdropButton
         className={styles.backdrop}
         aria-label="Close audio reload prompt"
         onClick={onClose}
@@ -28,12 +29,12 @@ export function AudioReloadPrompt({ isOpen, onClose, onSelectAudio }: AudioReloa
           The saved audio file could not be found or opened. Select the file if it has been moved.
         </p>
         <div className={styles.actions}>
-          <button className={styles.confirmButton} onClick={onSelectAudio}>
+          <Button variant="primary" onClick={onSelectAudio}>
             Select audio file
-          </button>
-          <button className={styles.cancelButton} onClick={onClose}>
+          </Button>
+          <Button variant="secondary" onClick={onClose}>
             Not now
-          </button>
+          </Button>
         </div>
       </section>
     </>

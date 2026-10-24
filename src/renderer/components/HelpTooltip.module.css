@@ -3,30 +3,6 @@
   display: inline-flex;
 }
 
-.button {
-  display: grid;
-  place-items: center;
-  width: var(--space-lg);
-  height: var(--space-lg);
-  padding: 0;
-  color: var(--color-muted);
-  background: var(--color-panel-raised);
-  border: var(--border-width-thin) solid var(--color-line);
-  border-radius: var(--radius-pill);
-}
-
-.button svg {
-  width: var(--text-xs);
-  height: var(--text-xs);
-  stroke-width: var(--border-width-normal);
-}
-
-.button:hover,
-.button[aria-expanded='true'] {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
 .tooltip {
   position: absolute;
   top: calc(100% + var(--space-xs));
@@ -43,16 +19,4 @@
   border: var(--border-width-thin) solid var(--color-line);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-panel);
-}
-
-@media (pointer: coarse) {
-  .button {
-    width: var(--control-size-sm);
-    height: var(--control-size-sm);
-  }
-
-  .button svg {
-    width: var(--text-sm);
-    height: var(--text-sm);
-  }
 }

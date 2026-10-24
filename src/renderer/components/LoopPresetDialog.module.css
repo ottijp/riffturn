@@ -32,18 +32,3 @@
   gap: var(--space-sm);
   justify-content: end;
 }
-
-.actions button {
-  padding: var(--space-sm) var(--space-md);
-  font: inherit;
-  color: var(--color-text);
-  background: var(--color-panel-raised);
-  border: var(--border-width-thin) solid var(--color-line);
-  border-radius: var(--radius-sm);
-}
-
-.primaryButton {
-  color: var(--color-canvas) !important;
-  background: var(--color-accent) !important;
-  border-color: var(--color-accent) !important;
-}

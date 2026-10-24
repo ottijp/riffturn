@@ -39,22 +39,6 @@
 
 .description button {
   justify-self: start;
-  padding: var(--space-xs) var(--space-sm);
-  font: inherit;
-  color: var(--color-text);
-  background: var(--color-panel-raised);
-  border: var(--border-width-thin) solid var(--color-line);
-  border-radius: var(--radius-sm);
-}
-
-.description button:hover:not(:disabled) {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.description button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .path {

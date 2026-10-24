@@ -1,6 +1,7 @@
 import type { StoredSegment } from '../../shared/project'
 import { formatGainDb } from '../lib/format'
 import styles from './TimelineToolbar.module.css'
+import { Button } from './Button'
 
 type TimelineToolbarProps = {
   activeSegment: StoredSegment
@@ -18,9 +19,9 @@ export function TimelineToolbar({
   return (
     <div className={styles.root}>
       <div className={styles.segmentActions}>
-        <button className={styles.addSegmentButton} onClick={onAddSegment}>
+        <Button size="sm" onClick={onAddSegment}>
           Add segment at playback position
-        </button>
+        </Button>
         <p className={styles.status}>
           {activeSegment.label} · {Math.round(activeSegment.speed * 100)}% speed ·{' '}
           {formatGainDb(activeSegment.gainDb)}

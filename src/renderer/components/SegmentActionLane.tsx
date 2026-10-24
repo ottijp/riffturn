@@ -2,6 +2,7 @@ import { Repeat2 } from 'lucide-react'
 import type { LoopMode, StoredSegment } from '../../shared/project'
 import { formatGainDb } from '../lib/format'
 import styles from './SegmentActionLane.module.css'
+import { IconButton } from './Button'
 
 type SegmentActionLaneProps = {
   duration: number
@@ -35,14 +36,16 @@ export function SegmentActionLane({
             <span className={styles.meta}>
               {segment.speed.toFixed(2)}× · {formatGainDb(segment.gainDb)}
             </span>
-            <button
-              className={`${styles.loopButton} ${isLoopTarget ? styles.active : ''}`}
+            <IconButton
+              className={styles.loopButton}
+              active={isLoopTarget}
               aria-label={`Set ${segment.label} as the loop range and play`}
               title={`Set ${segment.label} as the loop range and play`}
               onClick={() => onSetSingleSegmentLoop(segment)}
+              variant="ghost"
             >
               <Repeat2 aria-hidden="true" />
-            </button>
+            </IconButton>
           </div>
         )
       })}

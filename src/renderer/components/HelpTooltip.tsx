@@ -1,6 +1,7 @@
 import { Info } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import styles from './HelpTooltip.module.css'
+import { IconButton } from './Button'
 
 type HelpTooltipProps = {
   children: ReactNode
@@ -23,15 +24,16 @@ export function HelpTooltip({ children, label }: HelpTooltipProps) {
 
   return (
     <span ref={rootRef} className={styles.root}>
-      <button
-        type="button"
-        className={styles.button}
+      <IconButton
         aria-label={label}
         aria-expanded={isOpen}
+        active={isOpen}
+        size="sm"
+        variant="ghost"
         onClick={() => setIsOpen((value) => !value)}
       >
         <Info aria-hidden="true" />
-      </button>
+      </IconButton>
       {isOpen && (
         <span className={styles.tooltip} role="tooltip">
           {children}

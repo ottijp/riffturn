@@ -3,6 +3,7 @@ import type { LoopMode, SavedLoopPreset, StoredSegment } from '../../shared/proj
 import { formatDuration } from '../lib/format'
 import { HelpTooltip } from './HelpTooltip'
 import { LoopModeSelector } from './LoopModeSelector'
+import { Button } from './Button'
 import { LoopPresetDialog } from './LoopPresetDialog'
 import styles from './PracticeSettingsPanel.module.css'
 
@@ -189,14 +190,13 @@ export function PracticeSettingsPanel({
           <LoopModeSelector mode={loopMode} onChange={onLoopModeChange} />
         </div>
         <div className={styles.presetActions}>
-          <button
-            type="button"
+          <Button
             disabled={loopMode === 'none'}
             title={loopMode === 'none' ? 'Set a loop range before saving.' : undefined}
             onClick={() => setSavePresetDialogOpen(true)}
           >
             Save as
-          </button>
+          </Button>
           <select
             aria-label="Load saved loop setting"
             value={selectedPresetName}
@@ -213,8 +213,9 @@ export function PracticeSettingsPanel({
               </option>
             ))}
           </select>
-          <button
-            type="button"
+          <Button
+            variant="danger"
+            size="sm"
             disabled={!selectedPresetName}
             onClick={() => {
               if (!window.confirm(`Delete “${selectedPresetName}”?`)) return
@@ -224,7 +225,7 @@ export function PracticeSettingsPanel({
             }}
           >
             Delete
-          </button>
+          </Button>
         </div>
         {loopMode === 'none' && (
           <p className={styles.loopDisabled}>
@@ -281,9 +282,9 @@ export function PracticeSettingsPanel({
                     if (event.key === 'Escape') setTimeLoopStartDraft(String(loopRange[0]))
                   }}
                 />
-                <button type="button" onClick={() => setTimeLoopBoundaryToCurrentTime('start')}>
+                <Button size="sm" onClick={() => setTimeLoopBoundaryToCurrentTime('start')}>
                   Current position
-                </button>
+                </Button>
               </div>
             </label>
             <span className={styles.loopRangeArrow} aria-hidden="true">
@@ -304,9 +305,9 @@ export function PracticeSettingsPanel({
                     if (event.key === 'Escape') setTimeLoopEndDraft(String(loopRange[1]))
                   }}
                 />
-                <button type="button" onClick={() => setTimeLoopBoundaryToCurrentTime('end')}>
+                <Button size="sm" onClick={() => setTimeLoopBoundaryToCurrentTime('end')}>
                   Current position
-                </button>
+                </Button>
               </div>
             </label>
           </div>

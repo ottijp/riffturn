@@ -26,25 +26,5 @@
   white-space: nowrap;
 }
 .loopButton {
-  display: grid;
-  place-items: center;
-  width: var(--control-size-md);
-  height: var(--control-size-md);
-  padding: var(--space-2xs);
-  color: var(--color-muted);
-  background: transparent;
-  border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-pill);
-}
-.loopButton:hover {
-  color: var(--color-text);
-  background: var(--color-panel-raised);
-}
-.loopButton svg {
-  width: var(--text-lg);
-  height: var(--text-lg);
-}
-.active {
-  color: var(--color-canvas);
-  background: var(--color-accent);
 }

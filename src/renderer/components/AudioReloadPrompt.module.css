@@ -46,22 +46,3 @@
   justify-content: end;
   margin-top: var(--space-xl);
 }
-
-.confirmButton,
-.cancelButton {
-  padding: var(--space-sm) var(--space-md);
-  font: inherit;
-  border: var(--border-width-thin) solid var(--color-line);
-  border-radius: var(--radius-sm);
-}
-
-.confirmButton {
-  color: var(--color-canvas);
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.cancelButton {
-  color: var(--color-text);
-  background: var(--color-panel-raised);
-}

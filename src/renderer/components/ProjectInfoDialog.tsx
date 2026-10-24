@@ -2,6 +2,7 @@ import type { ProjectRecord } from '../../shared/project'
 import { useEffect, useState } from 'react'
 import { Dialog } from './Dialog'
 import styles from './ProjectInfoDialog.module.css'
+import { Button } from './Button'
 
 type ProjectInfoDialogProps = {
   onClose: () => void
@@ -41,13 +42,12 @@ export function ProjectInfoDialog({ onClose, onSaveDescription, project }: Proje
               value={description}
               onChange={(event) => setDescription(event.target.value)}
             />
-            <button
-              type="button"
+            <Button
               disabled={description === project.description}
               onClick={() => onSaveDescription(description)}
             >
               Save description
-            </button>
+            </Button>
           </>
         )}
       </div>

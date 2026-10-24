@@ -3,6 +3,7 @@ import type { StoredSegment } from '../../shared/project'
 import { formatDuration, formatGainDb } from '../lib/format'
 import { EditableName } from './EditableName'
 import styles from './SegmentSettingsDialog.module.css'
+import { BackdropButton, Button, IconButton } from './Button'
 
 type SegmentSettingsDialogProps = {
   isOpen: boolean
@@ -38,7 +39,7 @@ export function SegmentSettingsDialog({
 
   return (
     <>
-      <button className={styles.backdrop} aria-label="Close segment editor" onClick={onClose} />
+      <BackdropButton className={styles.backdrop} aria-label="Close segment editor" onClick={onClose} />
       <section
         className={styles.dialog}
         role="dialog"
@@ -57,13 +58,14 @@ export function SegmentSettingsDialog({
               onCommit={onNameChange}
             />
           </div>
-          <button
+          <IconButton
             className={styles.closeButton}
             aria-label="Close segment editor"
             onClick={onClose}
+            variant="ghost"
           >
             <X aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
         <div className={styles.range}>
           <span>{formatDuration(segment.start)}</span>
@@ -97,9 +99,9 @@ export function SegmentSettingsDialog({
           />
         </label>
         <div className={styles.actions}>
-          <button className={styles.deleteButton} onClick={onDelete}>
+          <Button className={styles.deleteButton} fullWidth variant="danger" onClick={onDelete}>
             Delete this segment
-          </button>
+          </Button>
         </div>
       </section>
     </>

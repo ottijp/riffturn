@@ -2,6 +2,7 @@ import { Pause, Play, RotateCcw, StepBack, StepForward } from 'lucide-react'
 import type { LoopMode } from '../../shared/project'
 import { formatGainDb } from '../lib/format'
 import styles from './PlaybackController.module.css'
+import { Button, IconButton } from './Button'
 
 type PlaybackControllerProps = {
   audioLoading: boolean
@@ -43,32 +44,35 @@ export function PlaybackController({
   return (
     <div className={styles.transport}>
       <div className={styles.left}>
-        <button
+        <IconButton
           aria-label="Play from the start of the loop range"
           title={loopMode === 'none' ? 'Set a loop range' : 'Practice from loop start'}
           className={styles.iconButton}
+          size="xl"
           disabled={loopMode === 'none' || isLoading}
           onClick={onStartPractice}
         >
           <RotateCcw aria-hidden="true" />
-        </button>
+        </IconButton>
       </div>
       <div className={styles.playback}>
-        <button
+        <IconButton
           className={styles.iconButton}
+          size="xl"
           onClick={() => onMoveSegment(-1)}
           aria-label="Go to previous segment"
         >
           <StepBack aria-hidden="true" />
-        </button>
-        <button
+        </IconButton>
+        <Button
           className={`${styles.iconButton} ${styles.seekButton}`}
+          size="xl"
           onClick={() => onSeek(Math.max(0, currentTime - 10), 'skip-back')}
           aria-label="Go back 10 seconds"
         >
           −10s
-        </button>
-        <button
+        </Button>
+        <IconButton
           aria-label={
             projectsLoading
               ? 'Preparing projects'
@@ -81,31 +85,34 @@ export function PlaybackController({
           aria-busy={isLoading}
           className={styles.playButton}
           disabled={isLoading}
+          loading={isLoading}
+          size="xl"
+          variant="primary"
           onClick={onTogglePlayback}
         >
-          {isLoading ? (
-            <span className={styles.loadingIndicator} aria-hidden="true" />
-          ) : playing ? (
+          {playing ? (
             <Pause aria-hidden="true" />
           ) : (
             <Play aria-hidden="true" />
           )}
-        </button>
-        <button
+        </IconButton>
+        <Button
           className={`${styles.iconButton} ${styles.seekButton}`}
+          size="xl"
           onClick={() => onSeek(Math.min(duration, currentTime + 10), 'skip-forward')}
           aria-label="Go forward 10 seconds"
         >
           +10s
-        </button>
-        <button
+        </Button>
+        <IconButton
           className={styles.iconButton}
+          size="xl"
           disabled={selectedIndex >= segmentCount - 1}
           onClick={() => onMoveSegment(1)}
           aria-label="Go to next segment"
         >
           <StepForward aria-hidden="true" />
-        </button>
+        </IconButton>
       </div>
       <div className={styles.right}>
         <div className={styles.now}>
