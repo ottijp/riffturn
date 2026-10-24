@@ -20,6 +20,8 @@ const initialSegments: StoredSegment[] = [
   { id: 'outro', label: 'Outro', start: 74, end: 96, speed: 0.7, gainDb: 0 },
 ]
 
+const segmentRestartThresholdSeconds = 3
+
 export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   const [title, setTitle] = useState('Midnight Drive')
   const [duration, setDuration] = useState(96)
@@ -261,6 +263,15 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     const activeIndex = segments.segments.findIndex(
       (segment) => segment.id === transport.activeSegment.id,
     )
+    // Account for playback speed so the configured real-time duration restarts the current segment.
+    if (offset === -1) {
+      const elapsedInSegment = transport.currentTime - transport.activeSegment.start
+      const restartThreshold = transport.activeSegment.speed * segmentRestartThresholdSeconds
+      if (activeIndex === 0 || restartThreshold <= elapsedInSegment) {
+        transport.seek(transport.activeSegment.start)
+        return
+      }
+    }
     const target = segments.segments[activeIndex + offset]
     if (!target) return
     segments.selectSegment(target)

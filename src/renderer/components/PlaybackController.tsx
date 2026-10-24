@@ -56,7 +56,6 @@ export function PlaybackController({
       <div className={styles.playback}>
         <button
           className={styles.iconButton}
-          disabled={selectedIndex <= 0}
           onClick={() => onMoveSegment(-1)}
           aria-label="Go to previous segment"
         >
