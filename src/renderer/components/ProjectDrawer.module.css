@@ -69,6 +69,7 @@
 }
 
 .closeButton svg,
+.projectInfoButton svg,
 .deleteProjectButton svg {
   width: var(--text-lg);
   height: var(--text-lg);
@@ -109,7 +110,7 @@
 
 .projectRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--control-size-md);
+  grid-template-columns: minmax(0, 1fr) var(--control-size-md) var(--control-size-md);
   gap: var(--space-xs);
   align-items: center;
 }
@@ -168,6 +169,7 @@
   color: var(--color-muted);
 }
 
+.projectInfoButton,
 .deleteProjectButton {
   width: var(--control-size-md);
   height: var(--control-size-md);
@@ -176,6 +178,18 @@
   background: transparent;
   border: var(--border-width-thin) solid var(--color-line);
   border-radius: var(--radius-sm);
+}
+
+.projectInfoButton {
+  color: var(--color-muted);
+  background: transparent;
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+.projectInfoButton:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .deleteProjectButton:hover {

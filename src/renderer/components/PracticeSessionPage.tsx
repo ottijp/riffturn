@@ -11,6 +11,7 @@ import { AppFooter } from './AppFooter'
 import { AppHeader } from './AppHeader'
 import { AudioReloadPrompt } from './AudioReloadPrompt'
 import { ProjectDrawer } from './ProjectDrawer'
+import { ProjectInfoDialog } from './ProjectInfoDialog'
 import { TimelineWorkspace } from './TimelineWorkspace'
 
 const initialSegments: StoredSegment[] = [
@@ -31,6 +32,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   const [sourcePath, setSourcePath] = useState<string | null>(null)
   const [isSample, setIsSample] = useState(false)
   const [projectDrawerOpen, setProjectDrawerOpen] = useState(false)
+  const [projectInfo, setProjectInfo] = useState<ProjectRecord | null>(null)
   const [reloadPromptOpen, setReloadPromptOpen] = useState(false)
   const [fileLoadMode, setFileLoadMode] = useState<'new' | 'existing' | 'replacement' | null>(null)
   const sourceLoadIdRef = useRef(0)
@@ -330,12 +332,17 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   ]
   const prerollStart = Math.max(0, loopVisualRange[0] - settings.defaultPrerollMs / 1000)
   const postrollEnd = Math.min(duration, loopVisualRange[1] + settings.defaultPostrollMs / 1000)
+  const currentProject = library.projects.find((project) => project.projectId === projectId) ?? null
 
   return (
     <main className={styles.app}>
       <AppHeader
         onOpenProjectDrawer={() => setProjectDrawerOpen(true)}
+        onShowProjectInfo={() => {
+          if (currentProject) setProjectInfo(currentProject)
+        }}
         onTitleChange={setTitle}
+        projectInfoAvailable={currentProject !== null}
         title={title}
       />
       <AudioReloadPrompt
@@ -358,8 +365,10 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
           setProjectDrawerOpen(false)
           setNotice(project.isSample ? 'Opened sample project.' : 'Opened local audio.')
         }}
+        onShowProjectInfo={setProjectInfo}
         projects={library.projects}
       />
+      <ProjectInfoDialog project={projectInfo} onClose={() => setProjectInfo(null)} />
       <TimelineWorkspace
         activeSegment={transport.activeSegment}
         audioLoading={transport.audioLoading}

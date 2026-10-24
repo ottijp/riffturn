@@ -1,0 +1,76 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background: var(--color-overlay-modal);
+  border: 0;
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 40;
+  width: min(30rem, calc(100vw - var(--space-2xl)));
+  padding: var(--space-xl);
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  transform: translate(-50%, -50%);
+}
+
+.wide {
+  width: min(34rem, calc(100vw - var(--space-2xl)));
+}
+
+.heading {
+  display: flex;
+  gap: var(--space-md);
+  align-items: start;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-display);
+  color: var(--color-muted);
+  letter-spacing: 0.12em;
+}
+
+.heading h2 {
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-xl);
+  overflow-wrap: anywhere;
+}
+
+.closeButton {
+  flex: 0 0 auto;
+  width: var(--control-size-md);
+  height: var(--control-size-md);
+  color: var(--color-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+
+.closeButton:hover {
+  color: var(--color-text);
+  background: var(--color-panel-raised);
+}
+
+.closeButton svg {
+  width: var(--text-lg);
+  height: var(--text-lg);
+  stroke-width: 1.75;
+}
+
+@media (max-width: 35rem) {
+  .dialog,
+  .wide {
+    width: min(34rem, calc(100vw - var(--space-lg)));
+    padding: var(--space-lg);
+  }
+}

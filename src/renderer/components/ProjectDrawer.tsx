@@ -1,4 +1,4 @@
-import { Music, Plus, Trash2, X } from 'lucide-react'
+import { Info, Music, Plus, Trash2, X } from 'lucide-react'
 import type { ProjectRecord } from '../../shared/project'
 import { formatDuration } from '../lib/format'
 import styles from './ProjectDrawer.module.css'
@@ -11,6 +11,7 @@ type ProjectDrawerProps = {
   onClose: () => void
   onRemoveProject: (project: ProjectRecord) => void
   onSelectProject: (project: ProjectRecord) => void
+  onShowProjectInfo: (project: ProjectRecord) => void
   projects: ProjectRecord[]
 }
 
@@ -22,6 +23,7 @@ export function ProjectDrawer({
   onClose,
   onRemoveProject,
   onSelectProject,
+  onShowProjectInfo,
   projects,
 }: ProjectDrawerProps) {
   return (
@@ -72,6 +74,14 @@ export function ProjectDrawer({
                     {project.isSample ? 'Sample audio' : 'Local audio'}
                   </small>
                 </span>
+              </button>
+              <button
+                className={styles.projectInfoButton}
+                aria-label={`Show information for ${project.title}`}
+                title={`Show information for ${project.title}`}
+                onClick={() => onShowProjectInfo(project)}
+              >
+                <Info aria-hidden="true" />
               </button>
               <button
                 className={styles.deleteProjectButton}

@@ -1,14 +1,22 @@
-import { PanelLeftOpen } from 'lucide-react'
+import { Info, PanelLeftOpen } from 'lucide-react'
 import styles from './AppHeader.module.css'
 import { EditableName } from './EditableName'
 
 type AppHeaderProps = {
   onOpenProjectDrawer: () => void
+  onShowProjectInfo: () => void
   onTitleChange: (title: string) => void
+  projectInfoAvailable: boolean
   title: string
 }
 
-export function AppHeader({ onOpenProjectDrawer, onTitleChange, title }: AppHeaderProps) {
+export function AppHeader({
+  onOpenProjectDrawer,
+  onShowProjectInfo,
+  onTitleChange,
+  projectInfoAvailable,
+  title,
+}: AppHeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.headerActions}>
@@ -21,7 +29,23 @@ export function AppHeader({ onOpenProjectDrawer, onTitleChange, title }: AppHead
           <PanelLeftOpen aria-hidden="true" />
         </button>
       </div>
-      <EditableName ariaLabel="Project name" heading="h1" value={title} onCommit={onTitleChange} />
+      <div className={styles.titleActions}>
+        <EditableName
+          ariaLabel="Project name"
+          heading="h1"
+          value={title}
+          onCommit={onTitleChange}
+        />
+        <button
+          className={styles.projectInfoButton}
+          aria-label="Show project information"
+          title="Show project information"
+          disabled={!projectInfoAvailable}
+          onClick={onShowProjectInfo}
+        >
+          <Info aria-hidden="true" />
+        </button>
+      </div>
     </header>
   )
 }
