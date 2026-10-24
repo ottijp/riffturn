@@ -38,7 +38,11 @@ export function Dialog({
     <>
       <BackdropButton className={styles.backdrop} aria-label={closeLabel} onClick={onClose} />
       <section
-        className={classNames(styles.dialog, size === 'wide' && styles.wide, size === 'narrow' && styles.narrow)}
+        className={classNames(
+          styles.dialog,
+          size === 'wide' && styles.wide,
+          size === 'narrow' && styles.narrow,
+        )}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
