@@ -39,7 +39,11 @@ export function SegmentSettingsDialog({
 
   return (
     <>
-      <BackdropButton className={styles.backdrop} aria-label="Close segment editor" onClick={onClose} />
+      <BackdropButton
+        className={styles.backdrop}
+        aria-label="Close segment editor"
+        onClick={onClose}
+      />
       <section
         className={styles.dialog}
         role="dialog"

@@ -36,7 +36,12 @@ export function Dialog({
             {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
             <h2 id={titleId}>{title}</h2>
           </div>
-          <IconButton className={styles.closeButton} aria-label={closeLabel} variant="ghost" onClick={onClose}>
+          <IconButton
+            className={styles.closeButton}
+            aria-label={closeLabel}
+            variant="ghost"
+            onClick={onClose}
+          >
             <X aria-hidden="true" />
           </IconButton>
         </div>

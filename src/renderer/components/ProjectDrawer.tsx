@@ -44,7 +44,12 @@ export function ProjectDrawer({
       >
         <div className={styles.heading}>
           <h2>Projects</h2>
-          <IconButton className={styles.closeButton} aria-label="Close projects" variant="ghost" onClick={onClose}>
+          <IconButton
+            className={styles.closeButton}
+            aria-label="Close projects"
+            variant="ghost"
+            onClick={onClose}
+          >
             <X aria-hidden="true" />
           </IconButton>
         </div>

@@ -11,7 +11,6 @@
   gap: var(--space-2xs);
 }
 
-
 .status {
   margin: 0;
   font-size: var(--text-xs);

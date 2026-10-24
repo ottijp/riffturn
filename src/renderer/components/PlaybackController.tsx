@@ -90,11 +90,7 @@ export function PlaybackController({
           variant="primary"
           onClick={onTogglePlayback}
         >
-          {playing ? (
-            <Pause aria-hidden="true" />
-          ) : (
-            <Play aria-hidden="true" />
-          )}
+          {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
         </IconButton>
         <Button
           className={`${styles.iconButton} ${styles.seekButton}`}
