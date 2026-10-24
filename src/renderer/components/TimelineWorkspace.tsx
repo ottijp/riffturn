@@ -1,5 +1,5 @@
 import { formatDuration } from '../lib/format'
-import type { LoopMode, StoredSegment } from '../../shared/project'
+import type { LoopMode, SavedLoopPreset, StoredSegment } from '../../shared/project'
 import { PlaybackController } from './PlaybackController'
 import { PracticeSettingsPanel } from './PracticeSettingsPanel'
 import { SegmentActionLane } from './SegmentActionLane'
@@ -27,8 +27,10 @@ type TimelineWorkspaceProps = {
   onDefaultPostrollChange: (value: number) => void
   onDefaultPrerollChange: (value: number) => void
   onDeleteSegment: () => void
+  onDeleteLoopPreset: (name: string) => Promise<void>
   onLoopModeChange: (mode: LoopMode) => void
   onLoopRangeChange: (range: [number, number]) => void
+  onLoadLoopPreset: (preset: SavedLoopPreset) => void
   onMasterGainChange: (gainDb: number) => void
   onMoveSegment: (offset: -1 | 1) => void
   onNotice: (message: string) => void
@@ -39,6 +41,7 @@ type TimelineWorkspaceProps = {
   onSegmentSpeedChange: (speed: number) => void
   onSelectTimelineSegment: (segment: StoredSegment) => void
   onSetSingleSegmentLoop: (segment: StoredSegment) => void
+  onSaveLoopPreset: (name: string) => Promise<void>
   onStartPractice: () => void
   onTogglePlayback: () => void
   playing: boolean
@@ -50,6 +53,7 @@ type TimelineWorkspaceProps = {
   segments: StoredSegment[]
   selectedIndex: number
   selectedSegment: StoredSegment
+  loopPresets: SavedLoopPreset[]
   visualLoopRange: [number, number]
 }
 
@@ -71,8 +75,10 @@ export function TimelineWorkspace({
   onDefaultPostrollChange,
   onDefaultPrerollChange,
   onDeleteSegment,
+  onDeleteLoopPreset,
   onLoopModeChange,
   onLoopRangeChange,
+  onLoadLoopPreset,
   onMasterGainChange,
   onMoveSegment,
   onNotice,
@@ -83,6 +89,7 @@ export function TimelineWorkspace({
   onSegmentSpeedChange,
   onSelectTimelineSegment,
   onSetSingleSegmentLoop,
+  onSaveLoopPreset,
   onStartPractice,
   onTogglePlayback,
   playing,
@@ -94,6 +101,7 @@ export function TimelineWorkspace({
   segments,
   selectedIndex,
   selectedSegment,
+  loopPresets,
   visualLoopRange,
 }: TimelineWorkspaceProps) {
   return (
@@ -171,9 +179,13 @@ export function TimelineWorkspace({
           onDefaultDelayBeforeChange={onDefaultDelayBeforeChange}
           onDefaultPostrollChange={onDefaultPostrollChange}
           onDefaultPrerollChange={onDefaultPrerollChange}
+          onDeleteLoopPreset={onDeleteLoopPreset}
+          onLoadLoopPreset={onLoadLoopPreset}
           onLoopModeChange={onLoopModeChange}
           onLoopRangeChange={onLoopRangeChange}
           onNotice={onNotice}
+          onSaveLoopPreset={onSaveLoopPreset}
+          loopPresets={loopPresets}
         />
       </section>
     </section>

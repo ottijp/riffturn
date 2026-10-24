@@ -1,6 +1,11 @@
 import type { DesktopApi } from '../../shared/desktop-api'
 import type { AudioFileDetails } from '../../shared/audio-file'
-import type { ProjectRecord, ProjectSummary, WaveformRecord } from '../../shared/project'
+import type {
+  ProjectRecord,
+  ProjectSummary,
+  SavedLoopPreset,
+  WaveformRecord,
+} from '../../shared/project'
 
 export type { AudioFileDetails } from '../../shared/audio-file'
 
@@ -48,6 +53,20 @@ export function listProjects(): Promise<ProjectSummary[]> {
 
 export function saveProject(project: ProjectRecord): Promise<void> {
   return api().saveProject(project)
+}
+
+export function listLoopPresets(projectId: string): Promise<SavedLoopPreset[]> {
+  return api().listLoopPresets(projectId)
+}
+
+export function saveLoopPreset(preset: SavedLoopPreset): Promise<void> {
+  return api().saveLoopPreset(preset)
+}
+
+export function deleteLoopPreset(
+  preset: Pick<SavedLoopPreset, 'projectId' | 'name'>,
+): Promise<void> {
+  return api().deleteLoopPreset(preset)
 }
 
 export function deleteProject(projectId: string): Promise<void> {

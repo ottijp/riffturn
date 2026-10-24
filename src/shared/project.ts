@@ -26,6 +26,15 @@ export const loopSettingsSchema = z.discriminatedUnion('mode', [
   segmentLoopSettingsSchema,
 ])
 
+export const loopPresetReferenceSchema = z.strictObject({
+  projectId: z.string(),
+  name: z.string().trim().min(1).max(100),
+})
+
+export const savedLoopPresetSchema = loopPresetReferenceSchema.extend({
+  loopSettings: loopSettingsSchema,
+})
+
 export const storedSegmentSchema = z.strictObject({
   id: z.string(),
   label: z.string(),
@@ -83,6 +92,7 @@ export const waveformRecordSchema = z.strictObject({
 export type StoredSegment = z.infer<typeof storedSegmentSchema>
 export type LoopMode = z.infer<typeof loopModeSchema>
 export type LoopSettings = z.infer<typeof loopSettingsSchema>
+export type SavedLoopPreset = z.infer<typeof savedLoopPresetSchema>
 export type ProjectRecordBase = z.infer<typeof projectRecordBaseSchema>
 export type SampleProjectRecord = z.infer<typeof sampleProjectRecordSchema>
 export type UserProjectRecord = z.infer<typeof userProjectRecordSchema>

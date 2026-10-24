@@ -86,6 +86,16 @@ export function usePracticeSettings({ duration, segments }: UsePracticeSettingsO
       return { mode: 'time', startSeconds: start, endSeconds: end }
     })
   }
+  const applyLoopSettings = (nextLoopSettings: LoopSettings): boolean => {
+    if (
+      nextLoopSettings.mode === 'segment' &&
+      (!segments.some((segment) => segment.id === nextLoopSettings.startSegmentId) ||
+        !segments.some((segment) => segment.id === nextLoopSettings.endSegmentId))
+    )
+      return false
+    setLoopSettings(nextLoopSettings)
+    return true
+  }
   const clearLoopForSegment = (segmentId: string) => {
     setLoopSettings((current) =>
       current.mode === 'segment' &&
@@ -97,6 +107,7 @@ export function usePracticeSettings({ duration, segments }: UsePracticeSettingsO
 
   return {
     applyProjectSettings,
+    applyLoopSettings,
     clearLoopForSegment,
     defaultDelayBeforeMs,
     defaultPostrollMs,

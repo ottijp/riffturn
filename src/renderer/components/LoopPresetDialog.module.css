@@ -1,0 +1,50 @@
+.form {
+  display: grid;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.form label {
+  display: grid;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.form input {
+  width: 100%;
+  padding: var(--space-sm);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-panel-raised);
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: end;
+}
+
+.actions button {
+  padding: var(--space-sm) var(--space-md);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-panel-raised);
+  border: var(--border-width-thin) solid var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+.primaryButton {
+  color: var(--color-canvas) !important;
+  background: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+}
+

@@ -1,5 +1,9 @@
 import { ipcMain } from 'electron'
-import { projectRecordSchema } from '../../shared/project.js'
+import {
+  loopPresetReferenceSchema,
+  projectRecordSchema,
+  savedLoopPresetSchema,
+} from '../../shared/project.js'
 import type { ProjectRepository } from '../repository/project-repository.cjs'
 import type { SampleProjectService } from '../sample-project-service.cjs'
 
@@ -24,6 +28,20 @@ export function registerProjectIpc(
         throw new Error('The sample project description cannot be changed.')
     }
     projects.save(result.data)
+  })
+  ipcMain.handle('loop-presets:list', (_event, projectId: string) => {
+    return projects.listLoopPresets(projectId)
+  })
+  ipcMain.handle('loop-presets:save', (_event, preset: unknown) => {
+    const result = savedLoopPresetSchema.safeParse(preset)
+    if (!result.success) throw new Error('Invalid loop preset.')
+    if (!projects.get(result.data.projectId)) throw new Error('Project not found.')
+    projects.saveLoopPreset(result.data)
+  })
+  ipcMain.handle('loop-presets:delete', (_event, preset: unknown) => {
+    const result = loopPresetReferenceSchema.safeParse(preset)
+    if (!result.success) throw new Error('Invalid loop preset.')
+    projects.deleteLoopPreset(result.data.projectId, result.data.name)
   })
   ipcMain.handle('projects:delete', async (_event, projectId: string) => {
     const project = projects.get(projectId)

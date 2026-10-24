@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import type { LoopMode, StoredSegment } from '../../shared/project'
+import type { LoopMode, SavedLoopPreset, StoredSegment } from '../../shared/project'
 import { formatDuration } from '../lib/format'
 import { HelpTooltip } from './HelpTooltip'
 import { LoopModeSelector } from './LoopModeSelector'
+import { LoopPresetDialog } from './LoopPresetDialog'
 import styles from './PracticeSettingsPanel.module.css'
 
 type Boundary = 'start' | 'end'
@@ -20,7 +21,11 @@ type PracticeSettingsPanelProps = {
   onDefaultPrerollChange: (value: number) => void
   onLoopModeChange: (mode: LoopMode) => void
   onLoopRangeChange: (range: [number, number]) => void
+  onDeleteLoopPreset: (name: string) => Promise<void>
+  onLoadLoopPreset: (preset: SavedLoopPreset) => void
   onNotice: (message: string) => void
+  onSaveLoopPreset: (name: string) => Promise<void>
+  loopPresets: SavedLoopPreset[]
   segments: StoredSegment[]
 }
 
@@ -37,11 +42,17 @@ export function PracticeSettingsPanel({
   onDefaultPrerollChange,
   onLoopModeChange,
   onLoopRangeChange,
+  onDeleteLoopPreset,
+  onLoadLoopPreset,
   onNotice,
+  onSaveLoopPreset,
+  loopPresets,
   segments,
 }: PracticeSettingsPanelProps) {
   const [timeLoopStartDraft, setTimeLoopStartDraft] = useState(String(loopRange[0]))
   const [timeLoopEndDraft, setTimeLoopEndDraft] = useState(String(loopRange[1]))
+  const [savePresetDialogOpen, setSavePresetDialogOpen] = useState(false)
+  const [selectedPresetName, setSelectedPresetName] = useState('')
   const loopStartIndex = Math.max(
     0,
     segments.findIndex((segment) => loopRange[0] >= segment.start && loopRange[0] < segment.end),
@@ -98,6 +109,12 @@ export function PracticeSettingsPanel({
 
   return (
     <section className={styles.root} aria-label="Track practice settings">
+      {savePresetDialogOpen && (
+        <LoopPresetDialog
+          onClose={() => setSavePresetDialogOpen(false)}
+          onSave={onSaveLoopPreset}
+        />
+      )}
       <p className={styles.eyebrow}>PLAYBACK SETTINGS</p>
       <label>
         <span>
@@ -170,6 +187,44 @@ export function PracticeSettingsPanel({
             </strong>
           </div>
           <LoopModeSelector mode={loopMode} onChange={onLoopModeChange} />
+        </div>
+        <div className={styles.presetActions}>
+          <button
+            type="button"
+            disabled={loopMode === 'none'}
+            title={loopMode === 'none' ? 'Set a loop range before saving.' : undefined}
+            onClick={() => setSavePresetDialogOpen(true)}
+          >
+            Save as
+          </button>
+          <select
+            aria-label="Load saved loop setting"
+            value={selectedPresetName}
+            onChange={(event) => {
+              const preset = loopPresets.find((item) => item.name === event.target.value)
+              setSelectedPresetName(event.target.value)
+              if (preset) onLoadLoopPreset(preset)
+            }}
+          >
+            <option value="">Load…</option>
+            {loopPresets.map((preset) => (
+              <option key={preset.name} value={preset.name}>
+                {preset.name}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            disabled={!selectedPresetName}
+            onClick={() => {
+              if (!window.confirm(`Delete “${selectedPresetName}”?`)) return
+              void onDeleteLoopPreset(selectedPresetName)
+                .then(() => setSelectedPresetName(''))
+                .catch(() => onNotice('Could not delete this loop setting.'))
+            }}
+          >
+            Delete
+          </button>
         </div>
         {loopMode === 'none' && (
           <p className={styles.loopDisabled}>

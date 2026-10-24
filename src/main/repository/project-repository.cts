@@ -1,9 +1,14 @@
 import type { ApplicationDatabase } from '../database.cjs'
-import { projectRecordSchema, projectSummarySchema } from '../../shared/project.js'
+import {
+  projectRecordSchema,
+  projectSummarySchema,
+  savedLoopPresetSchema,
+} from '../../shared/project.js'
 import type {
   LoopSettings,
   ProjectRecord,
   ProjectSummary,
+  SavedLoopPreset,
   StoredSegment,
 } from '../../shared/project.js'
 
@@ -45,6 +50,8 @@ type LoopRow = {
   end_segment_id: string | null
 }
 
+type LoopPresetRow = LoopRow & { name: string }
+
 function invalidLoopSettings(row: LoopRow | undefined, projectId?: string): Error {
   return new Error(
     `Invalid persisted loop settings. projectId=${row?.project_id ?? projectId ?? 'null'}, mode=${row?.mode ?? 'null'}, row=${JSON.stringify(row)}`,
@@ -53,12 +60,15 @@ function invalidLoopSettings(row: LoopRow | undefined, projectId?: string): Erro
 
 export interface ProjectRepository {
   delete(projectId: string): void
+  deleteLoopPreset(projectId: string, name: string): void
   findByHash(fileHash: string): ProjectRecord | null
   get(projectId: string): ProjectRecord | null
   hasSampleProjectsSeeded(): boolean
   list(): ProjectSummary[]
   markSampleProjectsSeeded(): void
+  listLoopPresets(projectId: string): SavedLoopPreset[]
   save(project: ProjectRecord): void
+  saveLoopPreset(preset: SavedLoopPreset): void
 }
 
 function loopSettingsFromRow(row: LoopRow): LoopSettings {
@@ -124,6 +134,9 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
   const getLoopSettings = database.prepare<[string], LoopRow>(
     'SELECT * FROM project_loop_settings WHERE project_id = ?',
   )
+  const listLoopPresets = database.prepare<[string], LoopPresetRow>(
+    'SELECT * FROM loop_presets WHERE project_id = ? ORDER BY name COLLATE NOCASE ASC',
+  )
   const saveProject = database.prepare(`
     INSERT INTO projects(
       project_id, title, description, duration, file_hash, source_path, is_sample, updated_at,
@@ -156,6 +169,18 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
       project_id, mode, time_start_seconds, time_end_seconds, start_segment_id, end_segment_id
     ) VALUES (?, ?, ?, ?, ?, ?)
   `)
+  const saveLoopPreset = database.prepare(`
+    INSERT INTO loop_presets(
+      project_id, name, mode, time_start_seconds, time_end_seconds, start_segment_id, end_segment_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(project_id, name) DO UPDATE SET
+      mode = excluded.mode,
+      time_start_seconds = excluded.time_start_seconds,
+      time_end_seconds = excluded.time_end_seconds,
+      start_segment_id = excluded.start_segment_id,
+      end_segment_id = excluded.end_segment_id
+  `)
+  const deleteLoopPreset = database.prepare('DELETE FROM loop_presets WHERE project_id = ? AND name = ?')
   const deleteProject = database.prepare('DELETE FROM projects WHERE project_id = ?')
 
   const load = (row: ProjectRow | undefined): ProjectRecord | null => {
@@ -168,6 +193,9 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
   return {
     delete(projectId) {
       deleteProject.run(projectId)
+    },
+    deleteLoopPreset(projectId, name) {
+      deleteLoopPreset.run(projectId, name)
     },
     findByHash(fileHash) {
       return load(findProjectByHash.get(fileHash))
@@ -188,6 +216,17 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
           updatedAt: row.updated_at,
         })
         if (!result.success) throw new Error('Invalid persisted project summary data.')
+        return result.data
+      })
+    },
+    listLoopPresets(projectId) {
+      return listLoopPresets.all(projectId).map((row) => {
+        const result = savedLoopPresetSchema.safeParse({
+          projectId: row.project_id,
+          name: row.name,
+          loopSettings: loopSettingsFromRow(row),
+        })
+        if (!result.success) throw new Error('Invalid persisted loop preset data.')
         return result.data
       })
     },
@@ -242,5 +281,28 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
         )
       else insertLoopSettings.run(project.projectId, 'none', null, null, null, null)
     }),
+    saveLoopPreset(preset) {
+      if (preset.loopSettings.mode === 'time')
+        saveLoopPreset.run(
+          preset.projectId,
+          preset.name,
+          'time',
+          preset.loopSettings.startSeconds,
+          preset.loopSettings.endSeconds,
+          null,
+          null,
+        )
+      else if (preset.loopSettings.mode === 'segment')
+        saveLoopPreset.run(
+          preset.projectId,
+          preset.name,
+          'segment',
+          null,
+          null,
+          preset.loopSettings.startSegmentId,
+          preset.loopSettings.endSegmentId,
+        )
+      else saveLoopPreset.run(preset.projectId, preset.name, 'none', null, null, null, null)
+    },
   }
 }

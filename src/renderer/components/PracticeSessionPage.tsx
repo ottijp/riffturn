@@ -8,6 +8,7 @@ import {
   readAudioFile,
 } from '../lib/desktop'
 import { useAudioTransport } from '../hooks/useAudioTransport'
+import { useLoopPresets } from '../hooks/useLoopPresets'
 import { usePracticeSettings } from '../hooks/usePracticeSettings'
 import { useProjects } from '../hooks/useProjects'
 import { useSegmentEditor } from '../hooks/useSegmentEditor'
@@ -47,6 +48,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   const waveform = useWaveform()
   const segments = useSegmentEditor({ duration, initialSegments, onNotice: setNotice })
   const settings = usePracticeSettings({ duration, segments: segments.segments })
+  const loopPresets = useLoopPresets(projectId)
   const openReloadPrompt = () => {
     setNotice('Reload the audio file for this project.')
     setReloadPromptOpen(true)
@@ -440,8 +442,19 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
           const deletedId = segments.deleteSelected()
           if (deletedId) settings.clearLoopForSegment(deletedId)
         }}
+        onDeleteLoopPreset={async (name) => {
+          await loopPresets.remove(name)
+          setNotice(`Deleted “${name}”.`)
+        }}
         onLoopModeChange={settings.setLoopMode}
         onLoopRangeChange={settings.setLoopRange}
+        onLoadLoopPreset={(preset) => {
+          if (!settings.applyLoopSettings(preset.loopSettings)) {
+            setNotice('Could not load this loop setting because its segments no longer exist.')
+            return
+          }
+          setNotice(`Loaded “${preset.name}”.`)
+        }}
         onMasterGainChange={settings.setMasterGainDb}
         onMoveSegment={moveSegment}
         onNotice={setNotice}
@@ -455,6 +468,10 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
           transport.seek(segment.start)
         }}
         onSetSingleSegmentLoop={setSingleSegmentLoop}
+        onSaveLoopPreset={async (name) => {
+          await loopPresets.save(name, settings.loopSettings)
+          setNotice(`Saved “${name}”.`)
+        }}
         onStartPractice={() => transport.startPractice(settings.loopRange[0])}
         onTogglePlayback={transport.togglePlayback}
         playing={transport.playing}
@@ -468,6 +485,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
           (segment) => segment.id === transport.activeSegment.id,
         )}
         selectedSegment={segments.selectedSegment}
+        loopPresets={loopPresets.presets}
         visualLoopRange={loopVisualRange}
       />
       <audio
