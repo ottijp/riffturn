@@ -1,3 +1,5 @@
+@value compact from '../styles/breakpoints.css';
+
 .backdrop {
   position: fixed;
   inset: 0;
@@ -23,6 +25,10 @@
 
 .wide {
   width: min(34rem, calc(100vw - var(--space-2xl)));
+}
+
+.narrow {
+  width: min(28rem, calc(100vw - var(--space-2xl)));
 }
 
 .heading {
@@ -68,9 +74,17 @@
 }
 
 @media (max-width: 35rem) {
-  .dialog,
+  .dialog:not(.narrow),
   .wide {
     width: min(34rem, calc(100vw - var(--space-lg)));
+    padding: var(--space-lg);
+  }
+}
+
+
+@media (max-width: compact) {
+  .narrow {
+    width: min(28rem, calc(100vw - var(--space-lg)));
     padding: var(--space-lg);
   }
 }

@@ -1,22 +1,34 @@
 import { X } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { classNames } from '../lib/class-names'
 import styles from './Dialog.module.css'
 import { BackdropButton, IconButton } from './Button'
 
-type DialogProps = {
+type DialogBaseProps = {
   children: ReactNode
   closeLabel: string
-  eyebrow?: string
   onClose: () => void
-  size?: 'standard' | 'wide'
-  title: ReactNode
+  size?: 'narrow' | 'standard' | 'wide'
   titleId: string
 }
+
+type DialogProps =
+  | (DialogBaseProps & {
+      eyebrow?: string
+      header?: never
+      title: ReactNode
+    })
+  | (DialogBaseProps & {
+      eyebrow?: never
+      header: ReactNode
+      title?: never
+    })
 
 export function Dialog({
   children,
   closeLabel,
   eyebrow,
+  header,
   onClose,
   size = 'standard',
   title,
@@ -26,16 +38,18 @@ export function Dialog({
     <>
       <BackdropButton className={styles.backdrop} aria-label={closeLabel} onClick={onClose} />
       <section
-        className={`${styles.dialog} ${size === 'wide' ? styles.wide : ''}`}
+        className={classNames(styles.dialog, size === 'wide' && styles.wide, size === 'narrow' && styles.narrow)}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
       >
         <div className={styles.heading}>
-          <div>
-            {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
-            <h2 id={titleId}>{title}</h2>
-          </div>
+          {header ?? (
+            <div>
+              {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
+              <h2 id={titleId}>{title}</h2>
+            </div>
+          )}
           <IconButton
             className={styles.closeButton}
             aria-label={closeLabel}
