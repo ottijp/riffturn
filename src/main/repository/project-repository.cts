@@ -180,7 +180,9 @@ export function createProjectRepository(database: ApplicationDatabase): ProjectR
       start_segment_id = excluded.start_segment_id,
       end_segment_id = excluded.end_segment_id
   `)
-  const deleteLoopPreset = database.prepare('DELETE FROM loop_presets WHERE project_id = ? AND name = ?')
+  const deleteLoopPreset = database.prepare(
+    'DELETE FROM loop_presets WHERE project_id = ? AND name = ?',
+  )
   const deleteProject = database.prepare('DELETE FROM projects WHERE project_id = ?')
 
   const load = (row: ProjectRow | undefined): ProjectRecord | null => {

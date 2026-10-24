@@ -1,10 +1,5 @@
 import type { AudioFileDetails } from './audio-file.js'
-import type {
-  ProjectRecord,
-  ProjectSummary,
-  SavedLoopPreset,
-  WaveformRecord,
-} from './project.js'
+import type { ProjectRecord, ProjectSummary, SavedLoopPreset, WaveformRecord } from './project.js'
 
 export type DesktopApi = {
   getProject: (projectId: string) => Promise<ProjectRecord | null>
