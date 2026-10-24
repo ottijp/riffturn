@@ -13,7 +13,7 @@ export function registerAudioIpc(): void {
   })
   ipcMain.handle('audio:inspect', async (_event, filePath: string) => {
     const metadata = await fs.stat(filePath)
-    if (!metadata.isFile()) throw new Error('音源ファイルではない．')
+    if (!metadata.isFile()) throw new Error('The selected path is not an audio file.')
     const bytes = await fs.readFile(filePath)
     return {
       path: filePath,

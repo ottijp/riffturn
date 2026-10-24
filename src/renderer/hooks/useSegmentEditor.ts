@@ -62,21 +62,21 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
     setSelectedId(nextSegment.id)
     onNotice(`Added “${nextSegment.label}” by splitting the segment at the playback position.`)
   }
-  const deleteSelected = () => {
-    if (!selectedSegment) return
+  const deleteSelected = (): string | null => {
+    if (!selectedSegment) return null
     const index = segments.findIndex((segment) => segment.id === selectedSegment.id)
     if (segments.length === 1) {
       onNotice(
         'The last segment cannot be deleted. At least one segment must cover the whole track.',
       )
-      return
+      return null
     }
     if (
       !window.confirm(
         `Delete “${selectedSegment.label}”? Its time range will be merged into the adjacent segment.`,
       )
     )
-      return
+      return null
     const next = [...segments]
     const replacementIndex = index > 0 ? index - 1 : 1
     const replacement = next[replacementIndex]
@@ -91,6 +91,7 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
     onNotice(
       `Deleted “${selectedSegment.label}” and merged its time range into the adjacent segment.`,
     )
+    return selectedSegment.id
   }
 
   return {

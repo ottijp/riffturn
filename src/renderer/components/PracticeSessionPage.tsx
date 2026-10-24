@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react'
-import type { ProjectRecord, StoredSegment } from '../../shared/project'
-import { chooseAudioFile, findProjectByHash, inspectAudioFile, readAudioFile } from '../lib/desktop'
+import type { ProjectRecord, ProjectSummary, StoredSegment } from '../../shared/project'
+import {
+  chooseAudioFile,
+  findProjectByHash,
+  getProject,
+  inspectAudioFile,
+  readAudioFile,
+} from '../lib/desktop'
 import { useAudioTransport } from '../hooks/useAudioTransport'
 import { usePracticeSettings } from '../hooks/usePracticeSettings'
 import { useProjectLibrary } from '../hooks/useProjectLibrary'
@@ -38,9 +44,9 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   const [fileLoadMode, setFileLoadMode] = useState<'new' | 'existing' | 'replacement' | null>(null)
   const sourceLoadIdRef = useRef(0)
   const projectsLoadingRef = useRef(true)
-  const settings = usePracticeSettings()
   const waveform = useWaveform()
   const segments = useSegmentEditor({ duration, initialSegments, onNotice: setNotice })
+  const settings = usePracticeSettings({ duration, segments: segments.segments })
   const openReloadPrompt = () => {
     setNotice('Reload the audio file for this project.')
     setReloadPromptOpen(true)
@@ -97,7 +103,33 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       }
     })()
   }
-  const library = useProjectLibrary({ onInitialProject: applyProject, onNotice: setNotice })
+  const loadProject = async (targetProjectId: string): Promise<ProjectRecord | null> => {
+    try {
+      const project = await getProject(targetProjectId)
+      if (!project) {
+        setNotice('Could not find the project.')
+        return null
+      }
+      applyProject(project)
+      return project
+    } catch {
+      setNotice('Could not open the project.')
+      return null
+    }
+  }
+  const showProjectInfo = async (targetProjectId: string) => {
+    try {
+      setProjectInfo(await getProject(targetProjectId))
+    } catch {
+      setNotice('Could not open project information.')
+    }
+  }
+  const library = useProjectLibrary({
+    onInitialProject: async (id) => {
+      await loadProject(id)
+    },
+    onNotice: setNotice,
+  })
   projectsLoadingRef.current = library.loading
 
   useEffect(() => {
@@ -111,8 +143,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       sourcePath,
       isSample,
       segments: segments.segments,
-      loopRange: settings.loopRange,
-      loopMode: settings.loopMode,
+      loopSettings: settings.loopSettings,
       masterGainDb: settings.masterGainDb,
       defaultDelayBeforeMs: settings.defaultDelayBeforeMs,
       defaultPrerollMs: settings.defaultPrerollMs,
@@ -128,8 +159,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     description,
     duration,
     segments.segments,
-    settings.loopRange,
-    settings.loopMode,
+    settings.loopSettings,
     settings.masterGainDb,
     settings.defaultDelayBeforeMs,
     settings.defaultPrerollMs,
@@ -242,7 +272,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     waveform.clear()
     setFileLoadMode(null)
   }
-  const removeProject = async (project: ProjectRecord) => {
+  const removeProject = async (project: ProjectSummary) => {
     const sourceNotice = project.isSample
       ? 'The sample audio file will also be deleted.'
       : 'The original audio file will not be deleted.'
@@ -250,7 +280,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
     try {
       const next = await library.remove(project.projectId)
       if (project.projectId === projectId) {
-        if (next[0]) applyProject(next[0])
+        if (next[0]) await loadProject(next[0].projectId)
         else clearCurrentProject()
       }
       setNotice('Deleted project.')
@@ -347,7 +377,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       <AppHeader
         onOpenProjectDrawer={() => setProjectDrawerOpen(true)}
         onShowProjectInfo={() => {
-          if (currentProject) setProjectInfo(currentProject)
+          if (currentProject) void showProjectInfo(currentProject.projectId)
         }}
         onTitleChange={setTitle}
         projectInfoAvailable={currentProject !== null}
@@ -369,11 +399,13 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         onClose={() => setProjectDrawerOpen(false)}
         onRemoveProject={(project) => void removeProject(project)}
         onSelectProject={(project) => {
-          applyProject(project)
-          setProjectDrawerOpen(false)
-          setNotice(project.isSample ? 'Opened sample project.' : 'Opened local audio.')
+          void loadProject(project.projectId).then((opened) => {
+            if (!opened) return
+            setProjectDrawerOpen(false)
+            setNotice(opened.isSample ? 'Opened sample project.' : 'Opened local audio.')
+          })
         }}
-        onShowProjectInfo={setProjectInfo}
+        onShowProjectInfo={(project) => void showProjectInfo(project.projectId)}
         projects={library.projects}
       />
       <ProjectInfoDialog
@@ -403,7 +435,10 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         onDefaultDelayBeforeChange={settings.setDefaultDelayBeforeMs}
         onDefaultPostrollChange={settings.setDefaultPostrollMs}
         onDefaultPrerollChange={settings.setDefaultPrerollMs}
-        onDeleteSegment={segments.deleteSelected}
+        onDeleteSegment={() => {
+          const deletedId = segments.deleteSelected()
+          if (deletedId) settings.clearLoopForSegment(deletedId)
+        }}
         onLoopModeChange={settings.setLoopMode}
         onLoopRangeChange={settings.setLoopRange}
         onMasterGainChange={settings.setMasterGainDb}

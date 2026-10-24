@@ -1,6 +1,6 @@
 import type { DesktopApi } from '../../shared/desktop-api'
 import type { AudioFileDetails } from '../../shared/audio-file'
-import type { ProjectRecord, WaveformRecord } from '../../shared/project'
+import type { ProjectRecord, ProjectSummary, WaveformRecord } from '../../shared/project'
 
 export type { AudioFileDetails } from '../../shared/audio-file'
 
@@ -38,7 +38,11 @@ function audioMimeType(name: string): string {
   return 'audio/mpeg'
 }
 
-export function listProjects(): Promise<ProjectRecord[]> {
+export function getProject(projectId: string): Promise<ProjectRecord | null> {
+  return api().getProject(projectId)
+}
+
+export function listProjects(): Promise<ProjectSummary[]> {
   return api().listProjects()
 }
 

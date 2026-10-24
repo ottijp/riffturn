@@ -59,7 +59,7 @@ export function createSampleProjectService(projects: ProjectRepository): SampleP
   return {
     add,
     async deleteAudio(filePath) {
-      if (!isManagedPath(filePath)) throw new Error('サンプル音源のパスが不正です．')
+      if (!isManagedPath(filePath)) throw new Error('Invalid sample audio path.')
       try {
         await fs.unlink(filePath)
       } catch (error) {

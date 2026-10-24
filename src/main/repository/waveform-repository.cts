@@ -12,10 +12,10 @@ function parseWaveform(payload: string): WaveformRecord {
   try {
     value = JSON.parse(payload)
   } catch {
-    throw new Error('波形の保存データを読み込めない．')
+    throw new Error('Could not read persisted waveform data.')
   }
   const result = waveformRecordSchema.safeParse(value)
-  if (!result.success) throw new Error('波形の保存データが不正です．')
+  if (!result.success) throw new Error('Invalid persisted waveform data.')
   return result.data
 }
 

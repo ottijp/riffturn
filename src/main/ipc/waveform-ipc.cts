@@ -8,7 +8,7 @@ export function registerWaveformIpc(waveforms: WaveformRepository): void {
   })
   ipcMain.handle('waveforms:save', (_event, waveform: unknown) => {
     const result = waveformRecordSchema.safeParse(waveform)
-    if (!result.success) throw new Error('波形が不正です．')
+    if (!result.success) throw new Error('Invalid waveform.')
     waveforms.save(result.data)
   })
 }

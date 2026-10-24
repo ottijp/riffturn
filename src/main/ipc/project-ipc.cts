@@ -10,15 +10,18 @@ export function registerProjectIpc(
   ipcMain.handle('projects:list', () => {
     return projects.list()
   })
+  ipcMain.handle('projects:get', (_event, projectId: string) => {
+    return projects.get(projectId)
+  })
   ipcMain.handle('projects:save', (_event, project: unknown) => {
     const result = projectRecordSchema.safeParse(project)
-    if (!result.success) throw new Error('プロジェクトが不正です．')
+    if (!result.success) throw new Error('Invalid project.')
     if (result.data.isSample) {
       if (!samples.isManagedPath(result.data.sourcePath))
-        throw new Error('サンプル音源のパスが不正です．')
+        throw new Error('Invalid sample audio path.')
       const existing = projects.get(result.data.projectId)
       if (!existing?.isSample || existing.description !== result.data.description)
-        throw new Error('サンプルプロジェクトの説明は変更できません．')
+        throw new Error('The sample project description cannot be changed.')
     }
     projects.save(result.data)
   })

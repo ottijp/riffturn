@@ -4,6 +4,28 @@ const finiteNumberSchema = z.number().finite()
 
 export const loopModeSchema = z.enum(['none', 'segment', 'time'])
 
+export const noLoopSettingsSchema = z.strictObject({
+  mode: z.literal('none'),
+})
+
+export const timeLoopSettingsSchema = z.strictObject({
+  mode: z.literal('time'),
+  startSeconds: finiteNumberSchema,
+  endSeconds: finiteNumberSchema,
+})
+
+export const segmentLoopSettingsSchema = z.strictObject({
+  mode: z.literal('segment'),
+  startSegmentId: z.string(),
+  endSegmentId: z.string(),
+})
+
+export const loopSettingsSchema = z.discriminatedUnion('mode', [
+  noLoopSettingsSchema,
+  timeLoopSettingsSchema,
+  segmentLoopSettingsSchema,
+])
+
 export const storedSegmentSchema = z.strictObject({
   id: z.string(),
   label: z.string(),
@@ -19,8 +41,7 @@ export const projectSettingsSchema = z.strictObject({
   duration: finiteNumberSchema,
   fileHash: z.string(),
   segments: z.array(storedSegmentSchema),
-  loopRange: z.tuple([finiteNumberSchema, finiteNumberSchema]),
-  loopMode: loopModeSchema,
+  loopSettings: loopSettingsSchema,
   masterGainDb: finiteNumberSchema,
   defaultDelayBeforeMs: finiteNumberSchema,
   defaultPrerollMs: finiteNumberSchema,
@@ -46,6 +67,14 @@ export const projectRecordSchema = z.discriminatedUnion('isSample', [
   userProjectRecordSchema,
 ])
 
+export const projectSummarySchema = z.strictObject({
+  projectId: z.string(),
+  title: z.string(),
+  duration: finiteNumberSchema,
+  isSample: z.boolean(),
+  updatedAt: finiteNumberSchema,
+})
+
 export const waveformRecordSchema = z.strictObject({
   fileHash: z.string(),
   peaks: z.array(finiteNumberSchema),
@@ -53,9 +82,11 @@ export const waveformRecordSchema = z.strictObject({
 
 export type StoredSegment = z.infer<typeof storedSegmentSchema>
 export type LoopMode = z.infer<typeof loopModeSchema>
+export type LoopSettings = z.infer<typeof loopSettingsSchema>
 export type ProjectRecordBase = z.infer<typeof projectRecordBaseSchema>
 export type SampleProjectRecord = z.infer<typeof sampleProjectRecordSchema>
 export type UserProjectRecord = z.infer<typeof userProjectRecordSchema>
 export type ProjectRecord = z.infer<typeof projectRecordSchema>
+export type ProjectSummary = z.infer<typeof projectSummarySchema>
 export type SampleProjectDefinition = z.infer<typeof projectSettingsSchema>
 export type WaveformRecord = z.infer<typeof waveformRecordSchema>

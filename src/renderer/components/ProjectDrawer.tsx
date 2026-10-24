@@ -1,5 +1,5 @@
 import { Info, Music, Plus, Trash2, X } from 'lucide-react'
-import type { ProjectRecord } from '../../shared/project'
+import type { ProjectSummary } from '../../shared/project'
 import { formatDuration } from '../lib/format'
 import styles from './ProjectDrawer.module.css'
 
@@ -9,10 +9,10 @@ type ProjectDrawerProps = {
   onAddAudio: () => void
   onAddSamples: () => void
   onClose: () => void
-  onRemoveProject: (project: ProjectRecord) => void
-  onSelectProject: (project: ProjectRecord) => void
-  onShowProjectInfo: (project: ProjectRecord) => void
-  projects: ProjectRecord[]
+  onRemoveProject: (project: ProjectSummary) => void
+  onSelectProject: (project: ProjectSummary) => void
+  onShowProjectInfo: (project: ProjectSummary) => void
+  projects: ProjectSummary[]
 }
 
 export function ProjectDrawer({

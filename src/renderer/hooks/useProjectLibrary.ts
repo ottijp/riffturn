@@ -1,14 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { addSampleProjects, deleteProject, listProjects, saveProject } from '../lib/desktop'
-import type { ProjectRecord } from '../../shared/project'
+import type { ProjectRecord, ProjectSummary } from '../../shared/project'
 
 type UseProjectLibraryOptions = {
-  onInitialProject: (project: ProjectRecord) => void
+  onInitialProject: (projectId: string) => Promise<void>
   onNotice: (message: string) => void
 }
 
+function summaryOf(project: ProjectRecord): ProjectSummary {
+  return {
+    projectId: project.projectId,
+    title: project.title,
+    duration: project.duration,
+    isSample: project.isSample,
+    updatedAt: project.updatedAt,
+  }
+}
+
 export function useProjectLibrary({ onInitialProject, onNotice }: UseProjectLibraryOptions) {
-  const [projects, setProjects] = useState<ProjectRecord[]>([])
+  const [projects, setProjects] = useState<ProjectSummary[]>([])
   const [loading, setLoading] = useState(true)
   const initialProjectRef = useRef(onInitialProject)
   const noticeRef = useRef(onNotice)
@@ -23,9 +33,9 @@ export function useProjectLibrary({ onInitialProject, onNotice }: UseProjectLibr
   useEffect(() => {
     let cancelled = false
     void refresh()
-      .then((next) => {
+      .then(async (next) => {
         if (cancelled) return
-        if (next[0]) initialProjectRef.current(next[0])
+        if (next[0]) await initialProjectRef.current(next[0].projectId)
         else noticeRef.current('Your library is empty. Add an audio file or sample project.')
       })
       .catch(() => noticeRef.current('Could not open saved projects.'))
@@ -38,7 +48,7 @@ export function useProjectLibrary({ onInitialProject, onNotice }: UseProjectLibr
   }, [])
   const persist = (project: ProjectRecord) => {
     setProjects((items) => [
-      project,
+      summaryOf(project),
       ...items.filter((item) => item.projectId !== project.projectId),
     ])
     void saveProject(project).catch(() => noticeRef.current('Could not save settings.'))
