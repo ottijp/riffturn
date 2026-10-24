@@ -2,7 +2,7 @@
   "name": "riffturn",
   "description": "A desktop app for practicing music with looped segments and adjustable playback speed.",
   "productName": "RiffTurn",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "author": {
     "name": "Satoshi Sakao",
     "email": "ottijp@users.noreply.github.com"
