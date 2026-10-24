@@ -21,8 +21,8 @@ function sampleAudioPath(fileName: string): string {
   return path.join(sampleDirectory(), fileName)
 }
 
-function bundledLibraryPath(): string {
-  return path.join(app.getAppPath(), app.isPackaged ? 'dist' : 'public', 'library')
+function bundledSampleProjectsPath(): string {
+  return path.join(app.getAppPath(), app.isPackaged ? 'dist' : 'public', 'sample-projects')
 }
 
 export function createSampleProjectService(projects: ProjectRepository): SampleProjectService {
@@ -42,7 +42,7 @@ export function createSampleProjectService(projects: ProjectRepository): SampleP
     for (const asset of sampleAssets) {
       if (projects.get(asset.projectId)) continue
       const sourcePath = sampleAudioPath(asset.audioFileName)
-      await fs.copyFile(path.join(bundledLibraryPath(), asset.audioFileName), sourcePath)
+      await fs.copyFile(path.join(bundledSampleProjectsPath(), asset.audioFileName), sourcePath)
       const project: ProjectRecord = {
         ...asset.definition,
         projectId: asset.projectId,

@@ -9,7 +9,7 @@ import {
 } from '../lib/desktop'
 import { useAudioTransport } from '../hooks/useAudioTransport'
 import { usePracticeSettings } from '../hooks/usePracticeSettings'
-import { useProjectLibrary } from '../hooks/useProjectLibrary'
+import { useProjects } from '../hooks/useProjects'
 import { useSegmentEditor } from '../hooks/useSegmentEditor'
 import { useWaveform } from '../hooks/useWaveform'
 import styles from '../App.module.css'
@@ -124,17 +124,17 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       setNotice('Could not open project information.')
     }
   }
-  const library = useProjectLibrary({
+  const projectState = useProjects({
     onInitialProject: async (id) => {
       await loadProject(id)
     },
     onNotice: setNotice,
   })
-  projectsLoadingRef.current = library.loading
+  projectsLoadingRef.current = projectState.loading
 
   useEffect(() => {
     if (!projectId || !fileHash || !sourcePath) return
-    library.persist({
+    projectState.persist({
       projectId,
       title,
       description,
@@ -278,7 +278,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
       : 'The original audio file will not be deleted.'
     if (!window.confirm(`Delete “${project.title}”? ${sourceNotice}`)) return
     try {
-      const next = await library.remove(project.projectId)
+      const next = await projectState.remove(project.projectId)
       if (project.projectId === projectId) {
         if (next[0]) await loadProject(next[0].projectId)
         else clearCurrentProject()
@@ -290,7 +290,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   }
   const addSamples = async () => {
     try {
-      const { added } = await library.addSamples()
+      const { added } = await projectState.addSamples()
       if (!projectId && added[0]) applyProject(added[0])
       setNotice(
         added.length > 0 ? 'Added sample projects.' : 'No sample projects are available to add.',
@@ -370,7 +370,8 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
   ]
   const prerollStart = Math.max(0, loopVisualRange[0] - settings.defaultPrerollMs / 1000)
   const postrollEnd = Math.min(duration, loopVisualRange[1] + settings.defaultPostrollMs / 1000)
-  const currentProject = library.projects.find((project) => project.projectId === projectId) ?? null
+  const currentProject =
+    projectState.projects.find((project) => project.projectId === projectId) ?? null
 
   return (
     <main className={styles.app}>
@@ -406,7 +407,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
           })
         }}
         onShowProjectInfo={(project) => void showProjectInfo(project.projectId)}
-        projects={library.projects}
+        projects={projectState.projects}
       />
       <ProjectInfoDialog
         project={projectInfo}
@@ -459,7 +460,7 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         playing={transport.playing}
         postrollEnd={postrollEnd}
         prerollStart={prerollStart}
-        projectsLoading={library.loading}
+        projectsLoading={projectState.loading}
         segmentCount={segments.segments.length}
         segmentSettingsOpen={segments.settingsOpen}
         segments={segments.segments}

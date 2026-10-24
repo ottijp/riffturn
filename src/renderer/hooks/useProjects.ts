@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { addSampleProjects, deleteProject, listProjects, saveProject } from '../lib/desktop'
 import type { ProjectRecord, ProjectSummary } from '../../shared/project'
 
-type UseProjectLibraryOptions = {
+type UseProjectsOptions = {
   onInitialProject: (projectId: string) => Promise<void>
   onNotice: (message: string) => void
 }
@@ -17,7 +17,7 @@ function summaryOf(project: ProjectRecord): ProjectSummary {
   }
 }
 
-export function useProjectLibrary({ onInitialProject, onNotice }: UseProjectLibraryOptions) {
+export function useProjects({ onInitialProject, onNotice }: UseProjectsOptions) {
   const [projects, setProjects] = useState<ProjectSummary[]>([])
   const [loading, setLoading] = useState(true)
   const initialProjectRef = useRef(onInitialProject)
@@ -36,7 +36,7 @@ export function useProjectLibrary({ onInitialProject, onNotice }: UseProjectLibr
       .then(async (next) => {
         if (cancelled) return
         if (next[0]) await initialProjectRef.current(next[0].projectId)
-        else noticeRef.current('Your library is empty. Add an audio file or sample project.')
+        else noticeRef.current('No projects yet. Add an audio file or sample project.')
       })
       .catch(() => noticeRef.current('Could not open saved projects.'))
       .finally(() => {
