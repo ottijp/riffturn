@@ -119,6 +119,7 @@
   display: flex;
   gap: var(--space-sm);
   align-items: center;
+  justify-content: flex-start;
   width: 100%;
   padding: var(--space-sm);
   margin-top: var(--space-sm);
