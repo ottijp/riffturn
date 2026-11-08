@@ -273,6 +273,7 @@ export function PracticeSettingsPanel({
                   onChange={(event) => setTimeLoopStartDraft(event.target.value)}
                   onBlur={() => commitTimeLoopBoundary('start')}
                   onKeyDown={(event) => {
+                    if (event.nativeEvent.isComposing) return
                     if (event.key === 'Enter') event.currentTarget.blur()
                     if (event.key === 'Escape') setTimeLoopStartDraft(String(loopRange[0]))
                   }}
@@ -296,6 +297,7 @@ export function PracticeSettingsPanel({
                   onChange={(event) => setTimeLoopEndDraft(event.target.value)}
                   onBlur={() => commitTimeLoopBoundary('end')}
                   onKeyDown={(event) => {
+                    if (event.nativeEvent.isComposing) return
                     if (event.key === 'Enter') event.currentTarget.blur()
                     if (event.key === 'Escape') setTimeLoopEndDraft(String(loopRange[1]))
                   }}

@@ -43,6 +43,7 @@ export function EditableName({
             onChange={(event) => setDraft(event.target.value)}
             onBlur={cancel}
             onKeyDown={(event) => {
+              if (event.nativeEvent.isComposing) return
               if (event.key === 'Enter') commit()
               if (event.key === 'Escape') cancel()
             }}
