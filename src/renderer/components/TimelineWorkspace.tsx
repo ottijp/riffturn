@@ -3,7 +3,7 @@ import type { LoopMode, SavedLoopPreset, StoredSegment } from '../../shared/proj
 import { PlaybackController } from './PlaybackController'
 import { PracticeSettingsPanel } from './PracticeSettingsPanel'
 import { SegmentActionLane } from './SegmentActionLane'
-import { SegmentSettingsDialog } from './SegmentSettingsDialog'
+import { SegmentSettingsPanel } from './SegmentSettingsPanel'
 import { TimelineSeekBar } from './TimelineSeekBar'
 import { TimelineToolbar } from './TimelineToolbar'
 import { WaveformTimeline } from './WaveformTimeline'
@@ -22,7 +22,6 @@ type TimelineWorkspaceProps = {
   loopRange: [number, number]
   masterGainDb: number
   onAddSegment: () => void
-  onCloseSegmentSettings: () => void
   onDefaultDelayBeforeChange: (value: number) => void
   onDefaultPostrollChange: (value: number) => void
   onDefaultPrerollChange: (value: number) => void
@@ -39,7 +38,7 @@ type TimelineWorkspaceProps = {
   onSegmentGainChange: (gainDb: number) => void
   onSegmentNameChange: (label: string) => void
   onSegmentSpeedChange: (speed: number) => void
-  onSelectTimelineSegment: (segment: StoredSegment) => void
+  onSeekToTimelineSegment: (segment: StoredSegment) => void
   onSetSingleSegmentLoop: (segment: StoredSegment) => void
   onSaveLoopPreset: (name: string) => Promise<void>
   onStartPractice: () => void
@@ -49,7 +48,6 @@ type TimelineWorkspaceProps = {
   prerollStart: number
   projectsLoading: boolean
   segmentCount: number
-  segmentSettingsOpen: boolean
   segments: StoredSegment[]
   selectedIndex: number
   selectedSegment: StoredSegment
@@ -70,7 +68,6 @@ export function TimelineWorkspace({
   loopRange,
   masterGainDb,
   onAddSegment,
-  onCloseSegmentSettings,
   onDefaultDelayBeforeChange,
   onDefaultPostrollChange,
   onDefaultPrerollChange,
@@ -87,7 +84,7 @@ export function TimelineWorkspace({
   onSegmentGainChange,
   onSegmentNameChange,
   onSegmentSpeedChange,
-  onSelectTimelineSegment,
+  onSeekToTimelineSegment,
   onSetSingleSegmentLoop,
   onSaveLoopPreset,
   onStartPractice,
@@ -97,7 +94,6 @@ export function TimelineWorkspace({
   prerollStart,
   projectsLoading,
   segmentCount,
-  segmentSettingsOpen,
   segments,
   selectedIndex,
   selectedSegment,
@@ -107,22 +103,7 @@ export function TimelineWorkspace({
   return (
     <section className={styles.root}>
       <div className={styles.waveCard}>
-        <SegmentSettingsDialog
-          isOpen={segmentSettingsOpen}
-          playbackSpeedSteps={playbackSpeedSteps}
-          segment={selectedSegment}
-          onClose={onCloseSegmentSettings}
-          onDelete={onDeleteSegment}
-          onGainChange={onSegmentGainChange}
-          onNameChange={onSegmentNameChange}
-          onSpeedChange={onSegmentSpeedChange}
-        />
-        <TimelineToolbar
-          activeSegment={activeSegment}
-          segments={segments}
-          onAddSegment={onAddSegment}
-          onSelectSegment={onOpenSegmentSettings}
-        />
+        <TimelineToolbar activeSegment={activeSegment} />
         <WaveformTimeline
           canvasRef={canvasRef}
           currentTime={currentTime}
@@ -132,8 +113,9 @@ export function TimelineWorkspace({
           postrollEnd={postrollEnd}
           prerollStart={prerollStart}
           segments={segments}
-          onOpenSettings={onOpenSegmentSettings}
-          onSelect={onSelectTimelineSegment}
+          onSelect={onOpenSegmentSettings}
+          onSeekToSegment={onSeekToTimelineSegment}
+          selectedSegmentId={selectedSegment.id}
         />
         <SegmentActionLane
           duration={duration}
@@ -145,6 +127,8 @@ export function TimelineWorkspace({
         <TimelineSeekBar
           currentTime={currentTime}
           duration={duration}
+          loopMode={loopMode}
+          loopRange={loopRange}
           segments={segments}
           onSeek={(time) => onSeek(time, 'seekbar')}
         />
@@ -167,6 +151,17 @@ export function TimelineWorkspace({
         segmentCount={segmentCount}
       />
       <section className={styles.lowerControls}>
+        <SegmentSettingsPanel
+          playbackSpeedSteps={playbackSpeedSteps}
+          segment={selectedSegment}
+          segments={segments}
+          onAdd={onAddSegment}
+          onSelect={onOpenSegmentSettings}
+          onDelete={onDeleteSegment}
+          onGainChange={onSegmentGainChange}
+          onNameChange={onSegmentNameChange}
+          onSpeedChange={onSegmentSpeedChange}
+        />
         <PracticeSettingsPanel
           currentTime={currentTime}
           defaultDelayBeforeMs={defaultDelayBeforeMs}

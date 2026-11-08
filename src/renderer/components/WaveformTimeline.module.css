@@ -1,4 +1,3 @@
-@value compact from '../styles/breakpoints.css';
 .root {
   position: relative;
   display: flex;
@@ -62,25 +61,8 @@
 .segment:hover {
   background: var(--color-segment-hover);
 }
-.settingsButton {
-  position: absolute;
-  top: var(--space-2xs);
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: var(--control-size-md);
-  height: var(--control-size-md);
-  padding: 0;
-  font-size: var(--text-lg);
-  color: var(--color-muted);
-  background: var(--color-panel);
-  border: var(--border-width-thin) solid var(--color-line);
-  border-radius: var(--radius-sm);
-  transform: translateX(calc(-100% - var(--space-2xs)));
-}
-.settingsButton:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
+.segment[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 var(--border-width-normal) var(--color-accent);
 }
 .playhead {
   position: absolute;
@@ -91,10 +73,4 @@
   pointer-events: none;
   background: var(--color-text);
   box-shadow: 0 0 0 var(--border-width-thick) var(--color-playhead-shadow);
-}
-
-@media (max-width: compact) {
-  .settingsButton {
-    display: none;
-  }
 }

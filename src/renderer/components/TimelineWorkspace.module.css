@@ -11,6 +11,9 @@
 }
 
 .lowerControls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
   margin-top: var(--space-3xl);
 }
 
@@ -24,6 +27,7 @@
   }
 
   .lowerControls {
+    grid-template-columns: minmax(0, 1fr);
     margin-top: var(--space-2xl);
   }
 }

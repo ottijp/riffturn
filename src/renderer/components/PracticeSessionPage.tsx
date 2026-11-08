@@ -434,7 +434,6 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         loopRange={settings.loopRange}
         masterGainDb={settings.masterGainDb}
         onAddSegment={() => segments.addSegment(transport.currentTime)}
-        onCloseSegmentSettings={() => segments.setSettingsOpen(false)}
         onDefaultDelayBeforeChange={settings.setDefaultDelayBeforeMs}
         onDefaultPostrollChange={settings.setDefaultPostrollMs}
         onDefaultPrerollChange={settings.setDefaultPrerollMs}
@@ -458,12 +457,12 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         onMasterGainChange={settings.setMasterGainDb}
         onMoveSegment={moveSegment}
         onNotice={setNotice}
-        onOpenSegmentSettings={segments.openSettings}
+        onOpenSegmentSettings={segments.selectSegment}
         onSeek={(time) => transport.seek(time)}
         onSegmentGainChange={(value) => segments.updateSelected('gainDb', value)}
         onSegmentNameChange={(value) => segments.updateSelected('label', value)}
         onSegmentSpeedChange={(value) => segments.updateSelected('speed', value)}
-        onSelectTimelineSegment={(segment) => {
+        onSeekToTimelineSegment={(segment) => {
           settings.setLoopMode('none')
           transport.seek(segment.start)
         }}
@@ -479,7 +478,6 @@ export function PracticeSessionPage({ buildYear }: { buildYear: number }) {
         prerollStart={prerollStart}
         projectsLoading={projectState.loading}
         segmentCount={segments.segments.length}
-        segmentSettingsOpen={segments.settingsOpen}
         segments={segments.segments}
         selectedIndex={segments.segments.findIndex(
           (segment) => segment.id === transport.activeSegment.id,

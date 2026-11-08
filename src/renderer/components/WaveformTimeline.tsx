@@ -1,7 +1,7 @@
-import { Fragment, type RefObject } from 'react'
+import type { RefObject } from 'react'
 import type { LoopMode, StoredSegment } from '../../shared/project'
 import styles from './WaveformTimeline.module.css'
-import { Button, IconButton } from './Button'
+import { Button } from './Button'
 
 type WaveformTimelineProps = {
   canvasRef: RefObject<HTMLCanvasElement | null>
@@ -9,11 +9,12 @@ type WaveformTimelineProps = {
   duration: number
   loopMode: LoopMode
   loopRange: [number, number]
-  onOpenSettings: (segment: StoredSegment) => void
   onSelect: (segment: StoredSegment) => void
+  onSeekToSegment: (segment: StoredSegment) => void
   postrollEnd: number
   prerollStart: number
   segments: StoredSegment[]
+  selectedSegmentId: string
 }
 
 export function WaveformTimeline({
@@ -22,11 +23,12 @@ export function WaveformTimeline({
   duration,
   loopMode,
   loopRange,
-  onOpenSettings,
   onSelect,
+  onSeekToSegment,
   postrollEnd,
   prerollStart,
   segments,
+  selectedSegmentId,
 }: WaveformTimelineProps) {
   const rangeStyle = (start: number, end: number) => ({
     left: `${(Math.max(0, start) / duration) * 100}%`,
@@ -44,30 +46,29 @@ export function WaveformTimeline({
         </>
       )}
       {segments.map((segment) => (
-        <Fragment key={segment.id}>
-          <Button
-            aria-label={`Go to the start of ${segment.label}`}
-            onClick={() => onSelect(segment)}
-            className={styles.segment}
-            variant="ghost"
-            style={{
-              left: `${(segment.start / duration) * 100}%`,
-              width: `${((segment.end - segment.start) / duration) * 100}%`,
-            }}
-          >
-            <span>{segment.label}</span>
-          </Button>
-          <IconButton
-            className={styles.settingsButton}
-            aria-label={`Edit ${segment.label}`}
-            title={`Edit ${segment.label}`}
-            variant="secondary"
-            style={{ left: `${(segment.end / duration) * 100}%` }}
-            onClick={() => onOpenSettings(segment)}
-          >
-            ⚙
-          </IconButton>
-        </Fragment>
+        <Button
+          key={segment.id}
+          aria-label={`Select ${segment.label}`}
+          aria-pressed={segment.id === selectedSegmentId}
+          title={`Select ${segment.label}; double-click or Shift+Enter to seek to its start`}
+          onClick={() => onSelect(segment)}
+          onDoubleClick={() => onSeekToSegment(segment)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && event.shiftKey) {
+              event.preventDefault()
+              onSelect(segment)
+              onSeekToSegment(segment)
+            }
+          }}
+          className={styles.segment}
+          variant="ghost"
+          style={{
+            left: `${(segment.start / duration) * 100}%`,
+            width: `${((segment.end - segment.start) / duration) * 100}%`,
+          }}
+        >
+          <span>{segment.label}</span>
+        </Button>
       ))}
       <span className={styles.playhead} style={{ left: `${(currentTime / duration) * 100}%` }} />
     </div>

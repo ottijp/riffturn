@@ -1,3 +1,4 @@
+import { ActionTooltip } from './components/ActionTooltip'
 import { PracticeSessionPage } from './components/PracticeSessionPage'
 
 type AppProps = {
@@ -5,5 +6,10 @@ type AppProps = {
 }
 
 export default function App({ buildYear }: AppProps) {
-  return <PracticeSessionPage buildYear={buildYear} />
+  return (
+    <>
+      <PracticeSessionPage buildYear={buildYear} />
+      <ActionTooltip />
+    </>
+  )
 }

@@ -31,12 +31,14 @@ export function Button({
   loading = false,
   size = 'md',
   type = 'button',
+  title,
   variant = 'secondary',
   ...props
 }: ButtonProps) {
   return (
     <button
       {...props}
+      data-tooltip={title}
       aria-busy={loading || props['aria-busy']}
       className={classNames(
         styles.root,

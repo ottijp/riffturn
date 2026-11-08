@@ -34,7 +34,8 @@ export function SegmentActionLane({
             }}
           >
             <span className={styles.meta}>
-              {segment.speed.toFixed(2)}× · {formatGainDb(segment.gainDb)}
+              <span>{segment.speed.toFixed(2)}×</span>
+              <span>{formatGainDb(segment.gainDb)}</span>
             </span>
             <IconButton
               className={styles.loopButton}

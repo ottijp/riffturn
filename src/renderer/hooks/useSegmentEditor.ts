@@ -10,7 +10,6 @@ type UseSegmentEditorOptions = {
 export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSegmentEditorOptions) {
   const [segments, setSegments] = useState(initialSegments)
   const [selectedId, setSelectedId] = useState(initialSegments[0]?.id ?? '')
-  const [settingsOpen, setSettingsOpen] = useState(false)
   const selectedSegment = useMemo(
     () => segments.find((segment) => segment.id === selectedId) ?? segments[0],
     [segments, selectedId],
@@ -19,13 +18,8 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
   const replaceSegments = (next: StoredSegment[]) => {
     setSegments(next)
     setSelectedId(next[0]?.id ?? '')
-    setSettingsOpen(false)
   }
   const selectSegment = (segment: StoredSegment) => setSelectedId(segment.id)
-  const openSettings = (segment: StoredSegment) => {
-    selectSegment(segment)
-    setSettingsOpen(true)
-  }
   const updateSelected = (key: keyof StoredSegment, value: string | number) => {
     if (!selectedSegment) return
     setSegments((items) =>
@@ -87,7 +81,6 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
     next.splice(index, 1)
     setSegments(next)
     setSelectedId(next[index > 0 ? index - 1 : 0].id)
-    setSettingsOpen(false)
     onNotice(
       `Deleted “${selectedSegment.label}” and merged its time range into the adjacent segment.`,
     )
@@ -97,7 +90,6 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
   return {
     addSegment,
     deleteSelected,
-    openSettings,
     replaceSegments,
     selectedIndex: selectedSegment
       ? segments.findIndex((segment) => segment.id === selectedSegment.id)
@@ -105,8 +97,6 @@ export function useSegmentEditor({ duration, initialSegments, onNotice }: UseSeg
     selectedSegment,
     selectSegment,
     segments,
-    settingsOpen,
-    setSettingsOpen,
     updateSelected,
   }
 }

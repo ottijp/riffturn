@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { Crosshair } from 'lucide-react'
 import type { LoopMode, SavedLoopPreset, StoredSegment } from '../../shared/project'
 import { formatDuration } from '../lib/format'
 import { HelpTooltip } from './HelpTooltip'
 import { LoopModeSelector } from './LoopModeSelector'
-import { Button } from './Button'
+import { Button, IconButton } from './Button'
 import { LoopPresetDialog } from './LoopPresetDialog'
+import { LoadLoopPresetDialog } from './LoadLoopPresetDialog'
 import styles from './PracticeSettingsPanel.module.css'
 
 type Boundary = 'start' | 'end'
@@ -50,10 +52,10 @@ export function PracticeSettingsPanel({
   loopPresets,
   segments,
 }: PracticeSettingsPanelProps) {
-  const [timeLoopStartDraft, setTimeLoopStartDraft] = useState(String(loopRange[0]))
-  const [timeLoopEndDraft, setTimeLoopEndDraft] = useState(String(loopRange[1]))
+  const [timeLoopStartDraft, setTimeLoopStartDraft] = useState(loopRange[0].toFixed(2))
+  const [timeLoopEndDraft, setTimeLoopEndDraft] = useState(loopRange[1].toFixed(2))
   const [savePresetDialogOpen, setSavePresetDialogOpen] = useState(false)
-  const [selectedPresetName, setSelectedPresetName] = useState('')
+  const [loadPresetDialogOpen, setLoadPresetDialogOpen] = useState(false)
   const loopStartIndex = Math.max(
     0,
     segments.findIndex((segment) => loopRange[0] >= segment.start && loopRange[0] < segment.end),
@@ -65,16 +67,17 @@ export function PracticeSettingsPanel({
 
   useEffect(() => {
     if (loopMode !== 'time') return
-    setTimeLoopStartDraft(String(loopRange[0]))
-    setTimeLoopEndDraft(String(loopRange[1]))
+    setTimeLoopStartDraft(loopRange[0].toFixed(2))
+    setTimeLoopEndDraft(loopRange[1].toFixed(2))
   }, [loopMode, loopRange])
 
   const commitTimeLoopBoundary = (boundary: Boundary) => {
     const draft = boundary === 'start' ? timeLoopStartDraft : timeLoopEndDraft
+    if (draft === loopRange[boundary === 'start' ? 0 : 1].toFixed(2)) return
     const value = Number(draft)
     if (draft.trim() === '' || !Number.isFinite(value)) {
-      if (boundary === 'start') setTimeLoopStartDraft(String(loopRange[0]))
-      else setTimeLoopEndDraft(String(loopRange[1]))
+      if (boundary === 'start') setTimeLoopStartDraft(loopRange[0].toFixed(2))
+      else setTimeLoopEndDraft(loopRange[1].toFixed(2))
       return
     }
     const time = Math.max(0, Math.min(duration, value))
@@ -83,10 +86,12 @@ export function PracticeSettingsPanel({
       (boundary === 'end' && time < loopRange[0])
     ) {
       onNotice('The start time must be before the end time.')
-      if (boundary === 'start') setTimeLoopStartDraft(String(loopRange[0]))
-      else setTimeLoopEndDraft(String(loopRange[1]))
+      if (boundary === 'start') setTimeLoopStartDraft(loopRange[0].toFixed(2))
+      else setTimeLoopEndDraft(loopRange[1].toFixed(2))
       return
     }
+    if (boundary === 'start') setTimeLoopStartDraft(time.toFixed(2))
+    else setTimeLoopEndDraft(time.toFixed(2))
     onLoopRangeChange(boundary === 'start' ? [time, loopRange[1]] : [loopRange[0], time])
   }
 
@@ -116,65 +121,15 @@ export function PracticeSettingsPanel({
           onSave={onSaveLoopPreset}
         />
       )}
+      {loadPresetDialogOpen && (
+        <LoadLoopPresetDialog
+          presets={loopPresets}
+          onClose={() => setLoadPresetDialogOpen(false)}
+          onDelete={onDeleteLoopPreset}
+          onLoad={onLoadLoopPreset}
+        />
+      )}
       <p className={styles.eyebrow}>PLAYBACK SETTINGS</p>
-      <label>
-        <span>
-          <span className={styles.settingLabel}>
-            Start delay{' '}
-            <HelpTooltip label="About start delay">
-              Wait for the specified number of seconds before playback starts.
-            </HelpTooltip>
-          </span>
-          <output>{(defaultDelayBeforeMs / 1000).toFixed(1)} s</output>
-        </span>
-        <input
-          type="range"
-          min="0"
-          max="10"
-          step=".5"
-          value={defaultDelayBeforeMs / 1000}
-          onChange={(event) => onDefaultDelayBeforeChange(Number(event.target.value) * 1000)}
-        />
-      </label>
-      <label>
-        <span>
-          <span className={styles.settingLabel}>
-            Preroll{' '}
-            <HelpTooltip label="About preroll">
-              Play from before the start of the loop range to hear the lead-in.
-            </HelpTooltip>
-          </span>
-          <output>{defaultPrerollMs / 1000} s</output>
-        </span>
-        <input
-          type="range"
-          min="0"
-          max="10"
-          step=".5"
-          value={defaultPrerollMs / 1000}
-          onChange={(event) => onDefaultPrerollChange(Number(event.target.value) * 1000)}
-        />
-      </label>
-      <label>
-        <span>
-          <span className={styles.settingLabel}>
-            Postroll{' '}
-            <HelpTooltip label="About postroll">
-              Continue playing for the specified number of seconds after the loop range before
-              repeating.
-            </HelpTooltip>
-          </span>
-          <output>{defaultPostrollMs / 1000} s</output>
-        </span>
-        <input
-          type="range"
-          min="0"
-          max="10"
-          step=".5"
-          value={defaultPostrollMs / 1000}
-          onChange={(event) => onDefaultPostrollChange(Number(event.target.value) * 1000)}
-        />
-      </label>
       <div className={styles.loopSettings}>
         <div className={styles.loopSettingsHeader}>
           <div>
@@ -188,44 +143,6 @@ export function PracticeSettingsPanel({
             </strong>
           </div>
           <LoopModeSelector mode={loopMode} onChange={onLoopModeChange} />
-        </div>
-        <div className={styles.presetActions}>
-          <Button
-            disabled={loopMode === 'none'}
-            title={loopMode === 'none' ? 'Set a loop range before saving.' : undefined}
-            onClick={() => setSavePresetDialogOpen(true)}
-          >
-            Save as
-          </Button>
-          <select
-            aria-label="Load saved loop setting"
-            value={selectedPresetName}
-            onChange={(event) => {
-              const preset = loopPresets.find((item) => item.name === event.target.value)
-              setSelectedPresetName(event.target.value)
-              if (preset) onLoadLoopPreset(preset)
-            }}
-          >
-            <option value="">Load…</option>
-            {loopPresets.map((preset) => (
-              <option key={preset.name} value={preset.name}>
-                {preset.name}
-              </option>
-            ))}
-          </select>
-          <Button
-            variant="danger"
-            size="sm"
-            disabled={!selectedPresetName}
-            onClick={() => {
-              if (!window.confirm(`Delete “${selectedPresetName}”?`)) return
-              void onDeleteLoopPreset(selectedPresetName)
-                .then(() => setSelectedPresetName(''))
-                .catch(() => onNotice('Could not delete this loop setting.'))
-            }}
-          >
-            Delete
-          </Button>
         </div>
         {loopMode === 'segment' && (
           <div className={styles.loopSegmentControls}>
@@ -262,10 +179,11 @@ export function PracticeSettingsPanel({
         )}
         {loopMode === 'time' && (
           <div className={styles.loopSegmentControls}>
-            <label>
-              <span>Start</span>
+            <div className={styles.timeLoopField}>
+              <label htmlFor="loop-start-time">Start</label>
               <div className={styles.timeLoopInput}>
                 <input
+                  id="loop-start-time"
                   type="text"
                   inputMode="decimal"
                   aria-label="Loop start time"
@@ -275,21 +193,26 @@ export function PracticeSettingsPanel({
                   onKeyDown={(event) => {
                     if (event.nativeEvent.isComposing) return
                     if (event.key === 'Enter') event.currentTarget.blur()
-                    if (event.key === 'Escape') setTimeLoopStartDraft(String(loopRange[0]))
+                    if (event.key === 'Escape') setTimeLoopStartDraft(loopRange[0].toFixed(2))
                   }}
                 />
-                <Button size="sm" onClick={() => setTimeLoopBoundaryToCurrentTime('start')}>
-                  Current position
-                </Button>
+                <IconButton
+                  aria-label="Set loop start to current position"
+                  title="Set loop start to current position"
+                  onClick={() => setTimeLoopBoundaryToCurrentTime('start')}
+                >
+                  <Crosshair aria-hidden="true" />
+                </IconButton>
               </div>
-            </label>
+            </div>
             <span className={styles.loopRangeArrow} aria-hidden="true">
               →
             </span>
-            <label>
-              <span>End</span>
+            <div className={styles.timeLoopField}>
+              <label htmlFor="loop-end-time">End</label>
               <div className={styles.timeLoopInput}>
                 <input
+                  id="loop-end-time"
                   type="text"
                   inputMode="decimal"
                   aria-label="Loop end time"
@@ -299,16 +222,92 @@ export function PracticeSettingsPanel({
                   onKeyDown={(event) => {
                     if (event.nativeEvent.isComposing) return
                     if (event.key === 'Enter') event.currentTarget.blur()
-                    if (event.key === 'Escape') setTimeLoopEndDraft(String(loopRange[1]))
+                    if (event.key === 'Escape') setTimeLoopEndDraft(loopRange[1].toFixed(2))
                   }}
                 />
-                <Button size="sm" onClick={() => setTimeLoopBoundaryToCurrentTime('end')}>
-                  Current position
-                </Button>
+                <IconButton
+                  aria-label="Set loop end to current position"
+                  title="Set loop end to current position"
+                  onClick={() => setTimeLoopBoundaryToCurrentTime('end')}
+                >
+                  <Crosshair aria-hidden="true" />
+                </IconButton>
               </div>
-            </label>
+            </div>
           </div>
         )}
+      </div>
+      {loopMode !== 'none' && (
+        <div className={styles.timingControls}>
+          <label>
+            <span>
+              <span className={styles.settingLabel}>
+                Start delay{' '}
+                <HelpTooltip label="About start delay">
+                  Wait for the specified number of seconds before playback starts.
+                </HelpTooltip>
+              </span>
+              <output>{(defaultDelayBeforeMs / 1000).toFixed(1)} s</output>
+            </span>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step=".5"
+              value={defaultDelayBeforeMs / 1000}
+              onChange={(event) => onDefaultDelayBeforeChange(Number(event.target.value) * 1000)}
+            />
+          </label>
+          <label>
+            <span>
+              <span className={styles.settingLabel}>
+                Preroll{' '}
+                <HelpTooltip label="About preroll">
+                  Play from before the start of the loop range to hear the lead-in.
+                </HelpTooltip>
+              </span>
+              <output>{defaultPrerollMs / 1000} s</output>
+            </span>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step=".5"
+              value={defaultPrerollMs / 1000}
+              onChange={(event) => onDefaultPrerollChange(Number(event.target.value) * 1000)}
+            />
+          </label>
+          <label>
+            <span>
+              <span className={styles.settingLabel}>
+                Postroll{' '}
+                <HelpTooltip label="About postroll">
+                  Continue playing for the specified number of seconds after the loop range before
+                  repeating.
+                </HelpTooltip>
+              </span>
+              <output>{defaultPostrollMs / 1000} s</output>
+            </span>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step=".5"
+              value={defaultPostrollMs / 1000}
+              onChange={(event) => onDefaultPostrollChange(Number(event.target.value) * 1000)}
+            />
+          </label>
+        </div>
+      )}
+      <div className={styles.presetActions}>
+        <Button
+          disabled={loopMode === 'none'}
+          title={loopMode === 'none' ? 'Set a loop range before saving.' : undefined}
+          onClick={() => setSavePresetDialogOpen(true)}
+        >
+          Save
+        </Button>
+        <Button onClick={() => setLoadPresetDialogOpen(true)}>Load</Button>
       </div>
     </section>
   )

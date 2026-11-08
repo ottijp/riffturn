@@ -8,30 +8,12 @@
   border: 0;
 }
 
-.labels {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 0 var(--space-2xs);
-}
-
-.currentTime {
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-strong);
-  color: var(--color-text);
-}
-
-.duration {
-  font-size: var(--text-sm);
-  text-align: right;
-}
-
 .root input {
   width: 100%;
   height: 2.8rem;
   -webkit-appearance: none;
   appearance: none;
-  cursor: ew-resize;
+  cursor: default;
   background: var(--color-panel-raised);
   border: var(--border-width-thin) solid var(--color-line);
   border-radius: var(--radius-sm);
@@ -100,4 +82,11 @@
   bottom: 0;
   width: var(--border-width-thin);
   background: var(--color-line);
+}
+
+.unavailable {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: not-allowed;
 }

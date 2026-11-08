@@ -30,6 +30,7 @@
 .now {
   margin-left: var(--space-md);
   font-variant-numeric: tabular-nums;
+  user-select: none;
 }
 .currentTime {
   font-weight: var(--font-weight-strong);
@@ -51,6 +52,7 @@
 .masterVolume span {
   display: flex;
   justify-content: space-between;
+  user-select: none;
 }
 .masterVolume output {
   color: var(--color-text);

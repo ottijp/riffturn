@@ -5,6 +5,7 @@
   justify-content: center;
   font: inherit;
   cursor: pointer;
+  user-select: none;
   border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-sm);
   transition:

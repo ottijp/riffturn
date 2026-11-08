@@ -18,12 +18,15 @@
   border-inline-start: var(--border-width-thin) solid var(--color-line);
 }
 .meta {
+  display: grid;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.625rem;
   color: var(--color-muted);
+  text-align: center;
   white-space: nowrap;
+  user-select: none;
 }
 .loopButton {
   border-radius: var(--radius-pill);
